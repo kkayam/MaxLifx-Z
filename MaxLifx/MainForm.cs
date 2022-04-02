@@ -105,7 +105,7 @@ namespace MaxLifx
             _suspendUi = false;
             _bulbController.ColourSet += BulbControllerOnColourSet;
 
-            if (File.Exists("default.MaxLifx.Threadset.xml") && false)
+            if (File.Exists("default.MaxLifx.Threadset.xml"))
             {
                 StopAllThreads();
                 LoadThreads("default.MaxLifx.Threadset.xml");

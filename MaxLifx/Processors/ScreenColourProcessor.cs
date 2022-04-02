@@ -484,6 +484,7 @@ namespace MaxLifx
                                     ImageLockMode.ReadOnly,
                                     PixelFormat.Format32bppArgb);
                         screenPixel.UnlockBits(srcData);
+
                         UInt16[] Hue_list = new UInt16[82];
                         UInt16[] Saturation_list = new UInt16[82];
                         UInt16[] Brightness_list = new UInt16[82];
@@ -508,15 +509,13 @@ namespace MaxLifx
                                 double saturation = 0;
                                 double brightness = 0;
                                 Utils.ColorToHSV((Color)avgZoneColour, out hue, out saturation, out brightness);
-                                brightness = (brightness * (SettingsCast.Brightness - SettingsCast.MinBrightness) + SettingsCast.MinBrightness);
-                                saturation = (saturation * (SettingsCast.Saturation - SettingsCast.MinSaturation) + SettingsCast.MinSaturation);
+                                brightness = (brightness * (SettingsCast.Brightness - SettingsCast.MinBrightness));
+                                saturation = (saturation * (SettingsCast.Saturation - SettingsCast.MinSaturation));
                                 Hue_list[i] = (UInt16)hue;
                                 Saturation_list[i] = (UInt16)saturation;
                                 Brightness_list[i] = (UInt16)brightness;
                                 Kelvin_list[i] = (UInt16)SettingsCast.Kelvin;
                                 
-                                // send
-                                //
                             }
                         }
                         var zonePayload = new SetExtendedColourZonesPayload
@@ -609,7 +608,7 @@ namespace MaxLifx
                     }*/
               //  }
             }
-            Thread.Sleep(SettingsCast.Delay);
+            Thread.Sleep(1000/SettingsCast.Delay);
         }
 
         #region
@@ -741,7 +740,7 @@ namespace MaxLifx
         }
 
         // this is used for dominant colour; it works but it doesn't look very good
-        /*public static Color dominantColour(Bitmap bmp)
+        public static Color dominantColour(Bitmap bmp)
         {
 
             Color MostUsedColor;
@@ -779,7 +778,7 @@ namespace MaxLifx
             MostUsedColor = Color.FromArgb(dctSortedByValueHighToLow.First().Key);
             // MostUsedColorIncidence = dctSortedByValueHighToLow.First().Value;
             return MostUsedColor;
-        }*/
+        }
         #endregion
     }
 
