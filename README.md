@@ -1,6 +1,6 @@
 # MaxLifx-Z
 
-MaxLifx-Z is a fork of the original MaxLifx with one goal in mind: get each of zones in a multizone light (such the Lifx Z), to respond to a certain area of the screen. In other words, an ambilight for your monitor using Lifx Z.
+This is a fork of the original MaxLifx-Z with one important improvement: SetExtendedColorZones messages! Instead of sending seperate messages to the lifx, we can now change all of the lights in a batch message. This is what i implemented and at the moment the code is sloppy and not commented. BUT IT WORKS!
 
 Grab the latest release here: https://github.com/gitCommitWiL/MaxLifx-Z/releases
 
