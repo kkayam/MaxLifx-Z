@@ -109,11 +109,10 @@ namespace MaxLifx.UIs
             brx.Text = Settings.BottomRight.X.ToString();
             bry.Text = Settings.BottomRight.Y.ToString();
             fade.Text = Settings.Fade.ToString();
-            brightness.Text = Settings.Brightness.ToString();
-            saturation.Text = Settings.Saturation.ToString();
+            brightness.Value = Settings.Brightness;
+            saturation.Value = Settings.Saturation;
             delay.Text = Settings.Delay.ToString();
-            tbKelvin.Text = Settings.Kelvin.ToString();
-
+            tbKelvin.Value = Settings.Kelvin;
         }
 
         private void button2_Click(object sender, EventArgs e)
@@ -149,11 +148,12 @@ namespace MaxLifx.UIs
             int.TryParse(bry.Text, out bryval);
             int.TryParse(fade.Text, out fadeval);
             int.TryParse(delay.Text, out delayval);
-            int.TryParse(saturation.Text, out satval);
-            int.TryParse(brightness.Text, out brightval);
-            int.TryParse(tbSaturationMin.Text, out minsatval);
-            int.TryParse(tbBrightnessMin.Text, out minbrightval);
-            int.TryParse(tbKelvin.Text, out kelvinval);
+
+            satval = saturation.Value;
+            brightval = brightness.Value;
+            minsatval = 0;
+            minbrightval = 0;
+            kelvinval = tbKelvin.Value;
 
             Settings.TopLeft = new Point(tlxval, tlyval);
             Settings.BottomRight = new Point(brxval, bryval);

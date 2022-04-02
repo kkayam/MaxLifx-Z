@@ -53,16 +53,16 @@
             this.label2.Font = new System.Drawing.Font("Segoe UI", 10F);
             this.label2.Location = new System.Drawing.Point(23, 56);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(116, 38);
+            this.label2.Size = new System.Drawing.Size(81, 38);
             this.label2.TabIndex = 1;
-            this.label2.Text = "Version 1.1\r\nby gitCommitWiL";
+            this.label2.Text = "Version 1.2 \nby Kkayam";
             // 
             // label3
             // 
             this.label3.AutoSize = true;
             this.label3.Location = new System.Drawing.Point(24, 108);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(232, 39);
+            this.label3.Size = new System.Drawing.Size(236, 39);
             this.label3.TabIndex = 3;
             this.label3.Text = "MaxLifx-Z is a fork of the original MaxLifx project.\r\nIt expands on the original " +
     "by making full use of\r\nmultizone Lifx products such as Lifx Z strips.";
@@ -86,9 +86,9 @@
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(221, 65);
             this.label4.TabIndex = 5;
-            this.label4.Text = "Credits to u/superwomble\r\nfor creating the original MaxLifx project.\r\n\n And a spec" +
-    "ial thanks to contributers: tidusjar,\r\nu/driver_king, /u/niXta-, and /u/clarkina" +
-    "tor";
+            this.label4.Text = "Credits to u/superwomble and gitCommitWiL\r\nfor creating the original MaxLifx proj" +
+    "ect.\r\n\n And a special thanks to contributers: tidusjar,\r\nu/driver_king, /u/niXta" +
+    "-, and /u/clarkinator";
             this.label4.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             // 
             // pictureBox1
