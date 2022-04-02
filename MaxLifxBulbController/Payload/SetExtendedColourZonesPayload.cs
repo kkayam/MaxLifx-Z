@@ -7,11 +7,12 @@ using System.Threading.Tasks;
 
 namespace MaxLifx.Payload
 {
+
     public class SetExtendedColourZonesPayload : SetColourPayload, IPayload
     {
         private byte[] _messageType = new byte[2] { 0xFE, 0x01 };
         public new byte[] MessageType { get { return _messageType; } }
-        public UInt16 start_index { get; set; }
+        public UInt16 start_index_16 { get; set; }
         public byte color_count { get; set; }
         public UInt16[] Hue_list { get; set; }
         public UInt16[] Saturation_list { get; set; }
@@ -58,18 +59,14 @@ namespace MaxLifx.Payload
 
             for (int i = 0; i < Hue_list.Count(); i++)
             {
-                var output = new List<byte>();
-                var hue = (Hue_list[i] * 65535) / 360;
-                var sat = Saturation_list[i];
-                var bri = Brightness_list[i];
-                var K = Kelvin_list[i];
+                var hue = (Hue_list[i] * 65535 ) / 360;
+                ushort sat = Saturation_list[i];
+                ushort bri = Brightness_list[i];
+                ushort K = Kelvin_list[i];
                 foreach (var u in new[] { (ushort)hue, (ushort)sat, (ushort)bri, (ushort)K })
                 {
-                    output.AddRange(BitConverter.GetBytes(u));
+                    colorBytes.AddRange(BitConverter.GetBytes(u));
                 }
-
-                colorBytes.AddRange(output.ToArray());
-
             }
 
             // The final part of our payload is the number of milliseconds over which to perform the transition. Lets set it to 
@@ -77,12 +74,11 @@ namespace MaxLifx.Payload
             // var _transitionLE = BitConverter.GetBytes(1024);
             // is 4 bytes
             var _transition = BitConverter.GetBytes(TransitionDuration);
-            var _start_index = BitConverter.GetBytes(start_index);
-            var _color_count = BitConverter.GetBytes(color_count);
+            var _start_index = BitConverter.GetBytes(start_index_16);
 
             var _payload = _transition.Concat(apply)
                 .Concat(_start_index)
-                .Concat(_color_count)
+                .Concat(new byte[] { color_count })
                 .Concat(colorBytes)
                 .ToArray();
 
@@ -90,3 +86,5 @@ namespace MaxLifx.Payload
         }
     }
 }
+
+

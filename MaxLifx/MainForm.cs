@@ -243,7 +243,7 @@ namespace MaxLifx
             var processor = new ScreenColourProcessor();
             processor.ShowUI = true;
             var thread = new Thread(() => processor.ScreenColour(_bulbController, new Random(_r.Next())));
-            StartNewThread(thread, "Screen Colour Thread", processor);
+            StartNewThread(thread, "Ambient Lights", processor);
             
         }
 
