@@ -340,25 +340,11 @@ namespace MaxLifx
 
                             switch (lightThread.Processor.GetType().ToString())
                             {
-                                case "MaxLifx.SoundResponseProcessor":
-                                    t =
-                                        new Thread(
-                                            () =>
-                                                ((SoundResponseProcessor) (lightThread.Processor)).SoundResponse(
-                                                    _bulbController, new Random(_r.Next())));
-                                    break;
                                 case "MaxLifx.ScreenColourProcessor":
                                     t =
                                         new Thread(
                                             () =>
                                                 ((ScreenColourProcessor) (lightThread.Processor)).ScreenColour(
-                                                    _bulbController, new Random(_r.Next())));
-                                    break;
-                                case "MaxLifx.SoundGeneratorProcessor":
-                                    t =
-                                        new Thread(
-                                            () =>
-                                                ((SoundGeneratorProcessor) (lightThread.Processor)).SoundGenerator(
                                                     _bulbController, new Random(_r.Next())));
                                     break;
                             }
@@ -396,14 +382,6 @@ namespace MaxLifx
         {
             foreach (ListViewItem x in lvThreads.Items)
                 _threadCollection.GetThread(x.SubItems[1].Text).Abort();
-        }
-
-        private void button6_Click(object sender, EventArgs e)
-        {
-            var s = new SoundResponseProcessor();
-            var thread = new Thread(() => s.SoundResponse(_bulbController, new Random(_r.Next())));
-            StartNewThread(thread, "Sound Response Thread", s);
-            s.ShowUI = true;
         }
 
         private void button7_Click(object sender, EventArgs e)
