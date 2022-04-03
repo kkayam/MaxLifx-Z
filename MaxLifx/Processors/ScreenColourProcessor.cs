@@ -43,9 +43,6 @@ namespace MaxLifx
             }
         }
 
-        public void ScreenColour()
-        {
-        }
 
         public void ScreenColour(MaxLifxBulbController bulbController, Random random)
         {

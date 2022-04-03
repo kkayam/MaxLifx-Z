@@ -29,16 +29,11 @@ namespace MaxLifx
         private bool _suspendUi = true;
         private readonly LightControlThreadCollection _threadCollection = new LightControlThreadCollection();
         private readonly Random _r = new Random();
-        private readonly int _thumbSize = 100;
         public readonly decimal Version = 1.1m;
         private Timer _schedulerTimer = new Timer();
         private MaxLifxSettings _settings = new MaxLifxSettings();
         public MainForm()
         {
-            // this.Icon = new System.Drawing.Icon("Resources\\Image1.ico");
-            Bitmap bmp = MaxLifx.Properties.Resources.m__1_;
-            this.Icon = Icon.FromHandle(bmp.GetHicon());
-
             if (!Directory.Exists(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "\\MaxLifx"))
                 Directory.CreateDirectory(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "\\MaxLifx");
 
@@ -103,8 +98,6 @@ namespace MaxLifx
             }
 
             _suspendUi = false;
-            _bulbController.ColourSet += BulbControllerOnColourSet;
-
             if (File.Exists("default.MaxLifx.Threadset.xml"))
             {
                 StopAllThreads();
@@ -132,69 +125,6 @@ namespace MaxLifx
                 case Microsoft.Win32.PowerModes.Suspend:
                     TurnAllBulbsOff();
                     break;
-            }
-        }
-
-        private void BulbControllerOnColourSet(object sender, EventArgs eventArgs)
-        {
-            if (InvokeRequired) // Line #1
-            {
-                BulbControllerOnColourSetDelegate d = BulbControllerOnColourSet;
-                Invoke(d, sender, eventArgs);
-                return;
-            }
-
-            var details = ((LabelAndColourPayload) sender);
-
-            var pbFound = false;
-            foreach (var c in panelBulbColours.Controls)
-            {
-                var pb = c as PictureBox;
-                if (pb != null)
-                {
-                    if (pb.Name == "pb" + details.Label)
-                    {
-                        var col = Utils.HsvToRgb(details.Payload.Hue, details.Payload.Saturation/65535.0f,
-                            details.Payload.Brightness/65535.0f);
-
-                        pb.BackColor = col;
-
-                        pbFound = true;
-                        break;
-                    }
-                }
-            }
-
-            if (!pbFound)
-            {
-                var controls = panelBulbColours.Controls;
-                var nextX = 0;
-
-                if (controls.Count > 0)
-                    nextX = controls[controls.Count - 1].Location.X + _thumbSize + 10;
-
-                var newLocation = new Point(nextX, 0);
-                var newLabelLocation = new Point(nextX, _thumbSize);
-
-                var pb = new PictureBox
-                {
-                    Name = "pb" + details.Label,
-                    Location = newLocation,
-                    Size = new Size(_thumbSize, _thumbSize),
-                    Text = details.Label,
-                };
-                pb.Click += B_Click2;
-
-                panelBulbColours.Controls.Add(pb);
-                var b = new Button
-                {
-                    Name = "lbl" + details.Label,
-                    Location = newLabelLocation,
-                    Text = details.Label,
-                    Width = 100
-                };
-                b.Click += B_Click;
-                panelBulbColours.Controls.Add(b);
             }
         }
 
@@ -621,11 +551,6 @@ namespace MaxLifx
             if (FormWindowState.Minimized == this.WindowState)
             {
                 ShowInTaskbar = false;
-                if (notifyIcon1.Icon == null)
-                {
-                    Bitmap bmp = MaxLifx.Properties.Resources.m__1_;
-                    notifyIcon1.Icon = Icon.FromHandle(bmp.GetHicon());
-                }
                 notifyIcon1.Visible = true;
             }
             else if (FormWindowState.Normal == this.WindowState)
@@ -654,31 +579,6 @@ namespace MaxLifx
         private void notifyIcon1_DoubleClick(object sender, EventArgs e)
         {
             notifyIcon1_MouseDoubleClick(sender, e);
-        }
-
-        private void button5_Click(object sender, EventArgs e)
-        {
-            if (tbManualBulbMac.Text.Length != 6 || !System.Text.RegularExpressions.Regex.IsMatch(tbManualBulbMac.Text, @"\A\b[0-9a-fA-F]+\b\Z"))
-            {
-                MessageBox.Show(
-                    "Enter the last six characters of the bulb's MAC address.  This can be found in the \"Edit Light\" dialog of the Android app, amongst other places.  For a virtual bulb, just enter 000000.");
-                return;
-            }
-            var n =
-                _bulbController.Bulbs.Where(x => x.Label.Length > 12 && x.Label.Substring(0, 12) == "Manual Bulb ")
-                    .Select(x => int.Parse(x.Label.Substring(12)));
-
-            int n2 = 1;
-
-            if (n.Count() > 0)
-                n2 = n.Max() + 1;
-
-            Bulb b = new Bulb() { Label = "Manual Bulb "+n2, Location = ScreenLocation.All, MacAddress = "D073D5" + tbManualBulbMac.Text.Length};
-            _bulbController.Bulbs.Add(b);
-            PopulateBulbListbox();
-            _suspendUi = false;
-            SaveSettings();
-            _suspendUi = true;
         }
 
         private void advancedDiscoverToolStripMenuItem_Click(object sender, EventArgs e)

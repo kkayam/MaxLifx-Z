@@ -123,6 +123,11 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Controls\Timeline\TimelineEvent.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
     <Compile Include="Scheduler\SchedulerEvent.cs" />
     <Compile Include="UIs\About.cs">
       <SubType>Form</SubType>
@@ -209,14 +214,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Resources.resx</DependentUpon>
-      <DesignTime>True</DesignTime>
-    </Compile>
     <EmbeddedResource Include="UIs\ProcessorUIs\ScreenColourUI.resx">
       <DependentUpon>ScreenColourUI.cs</DependentUpon>
     </EmbeddedResource>
@@ -244,9 +244,6 @@
     <None Include="Resources\Colour Wheel.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\m %281%29.png" />
-  </ItemGroup>
-  <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.5.2">
       <Visible>False</Visible>
       <ProductName>Microsoft .NET Framework 4.5.2 %28x86 and x64%29</ProductName>
@@ -260,8 +257,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Resources\3d2.ico" />
-    <Content Include="Resources\3dicon.ico" />
-    <Content Include="Resources\3dicon.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
