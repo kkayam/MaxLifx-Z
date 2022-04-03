@@ -1,14 +1,15 @@
 # MaxLifx-Z
 
-This is a fork of the original MaxLifx-Z with one important improvement: SetExtendedColorZones messages! Instead of sending seperate messages to the lifx, we can now change all of the lights in a batch message. This is what i implemented and at the moment the code is sloppy and not commented. BUT IT WORKS!
+This is a fork of the original MaxLifx-Z with one important improvement: SetExtendedColorZones messages! Instead of sending seperate messages to the lifx, we can now change all of the lights in a batch message. This is what i implemented and at the moment the code is not commented. BUT IT WORKS!
 
-Grab the latest release here: https://github.com/gitCommitWiL/MaxLifx-Z/releases
+## v2: What's new?
 
-## v1.1: What's new?
-
-- Added multizone support
-- Added Kelvin parameter
-- Changed colours from HSL to HSV (in general, colours will be brighter)
+- Focus on Ambient lighting
+- Support for extended color messages for newer Lifx Z and Lifx Beams. This means the whole trip is being updated in 1 message rather than 1 message per zone. In a case where the strip has 16 zones, the software is 16X faster and more responsive
+- Messages per second limit since the bulbs might break at more than 20 messages per second.
+- Brand new design for usability and again, focus on ambient lights (Screen colour lights)
+- New icon
+- Code cleanup for new focus on ambient lights (Screen colour lights)
 
 
 ## Ambilight Setup
