@@ -486,7 +486,10 @@ namespace MaxLifx
                         UInt16[] Saturation_list = new UInt16[82];
                         UInt16[] Brightness_list = new UInt16[82];
                         UInt16[] Kelvin_list = new UInt16[82];
-                        
+
+                        // Which bulb type we're dealing with, if we should use extended messages
+                        var ProductType = bulbController.Bulbs.Single(x => x.Label == label).Product;
+
                         for (int i = 0; i < zones; i++)
                         {
                             var areaColour = GetScreenColourZones(rectList[i], srcData, gdest, gsrc);
@@ -500,33 +503,62 @@ namespace MaxLifx
 
                             if (areaColour != null)
                             {
-                                Color avgZoneColour = (Color)areaColour;
-                                // Color isn't HSV, so need to convert
-                                double hue = 0;
-                                double saturation = 0;
-                                double brightness = 0;
-                                Utils.ColorToHSV((Color)avgZoneColour, out hue, out saturation, out brightness);
-                                brightness = (brightness * (SettingsCast.Brightness - SettingsCast.MinBrightness));
-                                saturation = (saturation * (SettingsCast.Saturation - SettingsCast.MinSaturation));
-                                Hue_list[i] = (UInt16)hue;
-                                Saturation_list[i] = (UInt16)saturation;
-                                Brightness_list[i] = (UInt16)brightness;
-                                Kelvin_list[i] = (UInt16)SettingsCast.Kelvin;
-                                
+                                if (ProductType == 32 || ProductType == 38)
+                                {
+                                    Color avgZoneColour = (Color)areaColour;
+                                    // Color isn't HSV, so need to convert
+                                    double hue = 0;
+                                    double saturation = 0;
+                                    double brightness = 0;
+                                    Utils.ColorToHSV((Color)avgZoneColour, out hue, out saturation, out brightness);
+                                    brightness = (brightness * (SettingsCast.Brightness - SettingsCast.MinBrightness));
+                                    saturation = (saturation * (SettingsCast.Saturation - SettingsCast.MinSaturation));
+                                    Hue_list[i] = (UInt16)hue;
+                                    Saturation_list[i] = (UInt16)saturation;
+                                    Brightness_list[i] = (UInt16)brightness;
+                                    Kelvin_list[i] = (UInt16)SettingsCast.Kelvin;
+                                } else
+                                {
+                                    Color avgZoneColour = (Color)areaColour;
+                                    // Color isn't HSV, so need to convert
+                                    double hue = 0;
+                                    double saturation = 0;
+                                    double brightness = 0;
+                                    Utils.ColorToHSV((Color)avgZoneColour, out hue, out saturation, out brightness);
+                                    brightness = (brightness * (SettingsCast.Brightness - SettingsCast.MinBrightness) + SettingsCast.MinBrightness);
+                                    saturation = (saturation * (SettingsCast.Saturation - SettingsCast.MinSaturation) + SettingsCast.MinSaturation);
+                                    var zonePayload = new SetColourZonesPayload
+                                    {
+                                        start_index = new byte[1] { (byte)(i) },
+                                        end_index = new byte[1] { (byte)(i) },
+                                        Kelvin = (ushort)SettingsCast.Kelvin,
+                                        TransitionDuration = (uint)(SettingsCast.Fade),
+                                        Hue = (int)hue,
+                                        Saturation = (ushort)saturation,
+                                        Brightness = (ushort)brightness,
+                                        // 0 for delayed apply; 1 for immediate (don't wait for other zones);
+                                        apply = new byte[1] { 1 }
+                                    };
+                                    // send
+                                    bulbController.SetColour(label, zonePayload, false);
+                                }
                             }
                         }
-                        var zonePayload = new SetExtendedColourZonesPayload
+                        if (ProductType == 32 || ProductType == 38)
                         {
-                            start_index_16 = (UInt16) 0,
-                            TransitionDuration = (uint)(SettingsCast.Fade),
-                            color_count = (byte) zones,
-                            Hue_list = Hue_list,
-                            Saturation_list = Saturation_list,
-                            Brightness_list = Brightness_list,
-                            Kelvin_list = Kelvin_list,
-                            apply = new byte[1] { 1 }
-                        };
-                        bulbController.SetColour(label, zonePayload, false);
+                            var zonePayload = new SetExtendedColourZonesPayload
+                            {
+                                start_index_16 = (UInt16)0,
+                                TransitionDuration = (uint)(SettingsCast.Fade),
+                                color_count = (byte)zones,
+                                Hue_list = Hue_list,
+                                Saturation_list = Saturation_list,
+                                Brightness_list = Brightness_list,
+                                Kelvin_list = Kelvin_list,
+                                apply = new byte[1] { 1 }
+                            };
+                            bulbController.SetColour(label, zonePayload, false);
+                        }
 
                         multiFlag = true;
                     }
