@@ -110,6 +110,29 @@ namespace MaxLifx
                 StopAllThreads();
                 LoadThreads("default.MaxLifx.Threadset.xml");
             }
+            Microsoft.Win32.SystemEvents.SessionEnded += new Microsoft.Win32.SessionEndedEventHandler(SystemEvents_SessionEnded);
+            Microsoft.Win32.SystemEvents.PowerModeChanged += new Microsoft.Win32.PowerModeChangedEventHandler(OnPowerModeChanged);
+
+
+        }
+
+        void SystemEvents_SessionEnded(object sender, Microsoft.Win32.SessionEndedEventArgs e)
+        {
+            TurnAllBulbsOff();
+        }
+
+        private void OnPowerModeChanged(object sender, Microsoft.Win32.PowerModeChangedEventArgs e)
+        {
+            switch (e.Mode)
+            {
+                case Microsoft.Win32.PowerModes.Resume:
+                    TurnAllBulbsOn();
+                    break;
+
+                case Microsoft.Win32.PowerModes.Suspend:
+                    TurnAllBulbsOff();
+                    break;
+            }
         }
 
         private void BulbControllerOnColourSet(object sender, EventArgs eventArgs)
@@ -428,15 +451,16 @@ namespace MaxLifx
 
         private void button3_Click(object sender, EventArgs e)
         {
-            StopAllThreads();
 
-            var s = new OpenFileDialog {DefaultExt = ".MaxLifx.Threadset.xml"};
+            var s = new OpenFileDialog { DefaultExt = ".MaxLifx.Threadset.xml" };
             s.Filter = "XML files (*.MaxLifx.Threadset.xml)|*.MaxLifx.Threadset.xml";
             s.InitialDirectory = Directory.GetCurrentDirectory();
             s.AddExtension = true;
 
-            if (s.ShowDialog() == DialogResult.OK)
+            if (s.ShowDialog() == DialogResult.OK) {
+                StopAllThreads();
                 LoadThreads(s.FileName);
+            }
         }
 
         private void StopAllThreads()
@@ -516,6 +540,7 @@ namespace MaxLifx
         {
             try
             {
+                TurnAllBulbsOn();
                 string sURL;
                 sURL = @"https://api.github.com/repos/gitCommitWiL/MaxLifx-Z/releases";
                 string response;
