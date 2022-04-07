@@ -90,16 +90,7 @@
     "ect.\r\n\n And a special thanks to contributers: tidusjar,\r\nu/driver_king, /u/niXta" +
     "-, and /u/clarkinator";
             this.label4.TextAlign = System.Drawing.ContentAlignment.TopCenter;
-            // 
-            // pictureBox1
-            // 
-            this.pictureBox1.Image = global::MaxLifx.Properties.Resources.m__1_;
-            this.pictureBox1.Location = new System.Drawing.Point(191, 14);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(85, 80);
-            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.pictureBox1.TabIndex = 2;
-            this.pictureBox1.TabStop = false;
+
             // 
             // About
             // 

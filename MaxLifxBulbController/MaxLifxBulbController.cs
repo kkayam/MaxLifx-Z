@@ -20,7 +20,6 @@ namespace MaxLifx.Controllers
         // Network details
         UdpClient _receivingUdpClient;
         string _localIp = Utils.LocalIPAddress();
-        Socket _sendingSocket;
         IPAddress _sendToAddress;
         IPEndPoint _sendingEndPoint;
 
@@ -101,7 +100,7 @@ namespace MaxLifx.Controllers
             // Now, find the labels of all the bubs we detected
             GetLabelPayload labelPayload = new GetLabelPayload();
             // and also the version of each bulb
-            //GetVersionPayload versionPayload = new GetVersionPayload();
+            GetVersionPayload versionPayload = new GetVersionPayload();
             // and zones if any
             GetColourZonesPayload ColourZonesPayload = new GetColourZonesPayload();
             foreach (var bulb in Bulbs)
@@ -112,8 +111,9 @@ namespace MaxLifx.Controllers
                 sendData = Utils.StringToByteArray(PacketFactory.GetPacket(Utils.StringToByteArray(bulb.MacAddress + "0000"), labelPayload));
                 a.Send(sendData, sendData.Length);
                 // Send version request to a specific bulb
-                //sendData = Utils.StringToByteArray(PacketFactory.GetPacket(Utils.StringToByteArray(bulb.MacAddress + "0000"), versionPayload));
-                //a.Send(sendData, sendData.Length);
+                Thread.Sleep(50); // Limit requests per second to 20 or bulb can break
+                sendData = Utils.StringToByteArray(PacketFactory.GetPacket(Utils.StringToByteArray(bulb.MacAddress + "0000"), versionPayload));
+                a.Send(sendData, sendData.Length);
                 a.Close();
 
                 //_sendingSocket.SendTo(sendData, _sendingEndPoint);
@@ -129,11 +129,11 @@ namespace MaxLifx.Controllers
                         var label1 = Utils.HexToAscii(Utils.ByteArrayToString(receivebytes).Substring(36 * 2));
                         bulb.Label = label1.Substring(0,label1.IndexOf('\0'));
                     }
-                    /*if (receivebytes[0] == 48)
+                    if (receivebytes[0] == 48)
                     {
                         // set the proper version of bulb
-                        System.Diagnostics.Debug.WriteLine(receivebytes[40]);
-                    }*/
+                        bulb.Product = receivebytes[40];
+                    }
                 }
             }
             // seperating the 2 seems more reliable

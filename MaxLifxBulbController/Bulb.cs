@@ -6,6 +6,8 @@ namespace MaxLifx.Controllers
     {
         public string MacAddress { get; set; }
         public string IpAddress { get; set; }
+        public int Product { get; set; }
+
         private string _label;
         // currently not using Version, but may be useful in the future to distinguish which type of light
         // in particular, gen 1 Z lights do not support the extended multizone api
