@@ -484,6 +484,11 @@ namespace MaxLifx
                                     ImageLockMode.ReadOnly,
                                     PixelFormat.Format32bppArgb);
                         screenPixel.UnlockBits(srcData);
+                        UInt16[] Hue_list = new UInt16[82];
+                        UInt16[] Saturation_list = new UInt16[82];
+                        UInt16[] Brightness_list = new UInt16[82];
+                        UInt16[] Kelvin_list = new UInt16[82];
+                        
                         for (int i = 0; i < zones; i++)
                         {
                             var areaColour = GetScreenColourZones(rectList[i], srcData, gdest, gsrc);
@@ -505,22 +510,28 @@ namespace MaxLifx
                                 Utils.ColorToHSV((Color)avgZoneColour, out hue, out saturation, out brightness);
                                 brightness = (brightness * (SettingsCast.Brightness - SettingsCast.MinBrightness) + SettingsCast.MinBrightness);
                                 saturation = (saturation * (SettingsCast.Saturation - SettingsCast.MinSaturation) + SettingsCast.MinSaturation);
-                                var zonePayload = new SetColourZonesPayload
-                                {
-                                    start_index = new byte[1] { (byte)(i) },
-                                    end_index = new byte[1] { (byte)(i) },
-                                    Kelvin = (ushort)SettingsCast.Kelvin,
-                                    TransitionDuration = (uint)(SettingsCast.Fade),
-                                    Hue = (int)hue,
-                                    Saturation = (ushort)saturation,
-                                    Brightness = (ushort)brightness,
-                                    // 0 for delayed apply; 1 for immediate (don't wait for other zones);
-                                    apply = new byte[1] { 1 }
-                                };
+                                Hue_list[i] = (UInt16)hue;
+                                Saturation_list[i] = (UInt16)saturation;
+                                Brightness_list[i] = (UInt16)brightness;
+                                Kelvin_list[i] = (UInt16)SettingsCast.Kelvin;
+                                
                                 // send
-                                bulbController.SetColour(label, zonePayload, false);
+                                //
                             }
                         }
+                        var zonePayload = new SetExtendedColourZonesPayload
+                        {
+                            start_index = (UInt16) 0,
+                            TransitionDuration = (uint)(SettingsCast.Fade),
+                            color_count = (byte) zones,
+                            Hue_list = Hue_list,
+                            Saturation_list = Saturation_list,
+                            Brightness_list = Brightness_list,
+                            Kelvin_list = Kelvin_list,
+                            apply = new byte[1] { 1 }
+                        };
+                        bulbController.SetColour(label, zonePayload, false);
+
                         multiFlag = true;
                     }
                 }
