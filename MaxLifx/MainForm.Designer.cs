@@ -114,7 +114,7 @@
             // 
             // button7
             // 
-            this.button7.BackColor = System.Drawing.Color.Red;
+            this.button7.BackColor = System.Drawing.Color.Salmon;
             this.button7.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.button7.Location = new System.Drawing.Point(271, 125);
             this.button7.Name = "button7";
@@ -161,7 +161,7 @@
             // 
             // button1
             // 
-            this.button1.BackColor = System.Drawing.Color.Lime;
+            this.button1.BackColor = System.Drawing.Color.DarkSeaGreen;
             this.button1.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.button1.Location = new System.Drawing.Point(271, 19);
             this.button1.Name = "button1";
@@ -196,7 +196,7 @@
             this.panelBulbColours.AutoScroll = true;
             this.panelBulbColours.Location = new System.Drawing.Point(7, 19);
             this.panelBulbColours.Name = "panelBulbColours";
-            this.panelBulbColours.Size = new System.Drawing.Size(395, 118);
+            this.panelBulbColours.Size = new System.Drawing.Size(395, 133);
             this.panelBulbColours.TabIndex = 46;
             // 
             // gbMonitors
@@ -204,7 +204,7 @@
             this.gbMonitors.Controls.Add(this.panelBulbColours);
             this.gbMonitors.Location = new System.Drawing.Point(9, 237);
             this.gbMonitors.Name = "gbMonitors";
-            this.gbMonitors.Size = new System.Drawing.Size(413, 151);
+            this.gbMonitors.Size = new System.Drawing.Size(413, 164);
             this.gbMonitors.TabIndex = 53;
             this.gbMonitors.TabStop = false;
             this.gbMonitors.Text = "Bulb Monitors";
@@ -316,7 +316,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(434, 399);
+            this.ClientSize = new System.Drawing.Size(434, 411);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.menuStrip1);
