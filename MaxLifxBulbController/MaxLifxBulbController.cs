@@ -129,11 +129,11 @@ namespace MaxLifx.Controllers
                         var label1 = Utils.HexToAscii(Utils.ByteArrayToString(receivebytes).Substring(36 * 2));
                         bulb.Label = label1.Substring(0,label1.IndexOf('\0'));
                     }
-                    /* if (receivebytes[0] == 48)
+                    /*if (receivebytes[0] == 48)
                     {
                         // set the proper version of bulb
-                        bulb.Version = receivebytes[40];
-                    } */
+                        System.Diagnostics.Debug.WriteLine(receivebytes[40]);
+                    }*/
                 }
             }
             // seperating the 2 seems more reliable
