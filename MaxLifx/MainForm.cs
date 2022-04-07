@@ -197,7 +197,6 @@ namespace MaxLifx
             processor.ShowUI = true;
             var thread = new Thread(() => processor.ScreenColour(_bulbController, new Random(_r.Next())));
             StartNewThread(thread, "Ambient Lights", processor);
-            
         }
 
         private void lbBulbs_SelectedIndexChanged(object sender, EventArgs e)
