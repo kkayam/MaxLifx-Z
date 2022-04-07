@@ -638,7 +638,6 @@ namespace MaxLifx
         {
             public Color topleft, topright, bottomleft, bottomright, left, right, top, bottom, all;
         }
-        
         public unsafe Color GetAverageColor(Bitmap image, int sampleStep = 1)
         {
             var data = image.LockBits(
