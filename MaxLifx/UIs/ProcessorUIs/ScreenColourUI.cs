@@ -135,7 +135,7 @@ namespace MaxLifx.UIs
                 brxval = 0,
                 bryval = 0,
                 fadeval = 150,
-                delayval = 30,
+                delayval = 20,
                 brightval = 32767,
                 satval = 32767,
                 minbrightval  = 0,

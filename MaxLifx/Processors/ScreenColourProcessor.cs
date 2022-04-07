@@ -520,7 +520,7 @@ namespace MaxLifx
                         }
                         var zonePayload = new SetExtendedColourZonesPayload
                         {
-                            start_index = (UInt16) 0,
+                            start_index_16 = (UInt16) 0,
                             TransitionDuration = (uint)(SettingsCast.Fade),
                             color_count = (byte) zones,
                             Hue_list = Hue_list,
@@ -608,7 +608,8 @@ namespace MaxLifx
                     }*/
               //  }
             }
-            Thread.Sleep(1000/SettingsCast.Delay);
+
+            Thread.Sleep(1000/ Math.Min(SettingsCast.Delay, 20));
         }
 
         #region
