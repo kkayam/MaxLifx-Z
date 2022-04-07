@@ -135,7 +135,7 @@ namespace MaxLifx.UIs
                 brxval = 0,
                 bryval = 0,
                 fadeval = 150,
-                delayval = 50,
+                delayval = 30,
                 brightval = 32767,
                 satval = 32767,
                 minbrightval  = 0,
@@ -223,6 +223,11 @@ namespace MaxLifx.UIs
         }
         else
             this.GetSizeFromMonitor(monitor);
+        }
+
+        private void ScreenColourUI_Load(object sender, EventArgs e)
+        {
+
         }
     }
 
