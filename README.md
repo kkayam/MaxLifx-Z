@@ -1,4 +1,4 @@
-# MaxLifx-Z
+# MaxLifx-Z Improved
 
 This is a fork of the original MaxLifx-Z with one important improvement: SetExtendedColorZones messages! Instead of sending seperate messages to the lifx, we can now change all of the lights in a batch message. This is what i implemented and at the moment the code is not commented. BUT IT WORKS!
 
