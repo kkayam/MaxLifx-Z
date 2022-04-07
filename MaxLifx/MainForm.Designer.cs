@@ -29,11 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            this.lbBulbs = new System.Windows.Forms.ListBox();
-            this.groupBox3 = new System.Windows.Forms.GroupBox();
-            this.label1 = new System.Windows.Forms.Label();
-            this.tbManualBulbMac = new System.Windows.Forms.TextBox();
-            this.button5 = new System.Windows.Forms.Button();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.button7 = new System.Windows.Forms.Button();
             this.lvThreads = new System.Windows.Forms.ListView();
             this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -56,61 +52,16 @@
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.notifyIcon1 = new System.Windows.Forms.NotifyIcon(this.components);
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.groupBox3.SuspendLayout();
+            this.lbBulbs = new System.Windows.Forms.ListBox();
+            this.button5 = new System.Windows.Forms.Button();
+            this.tbManualBulbMac = new System.Windows.Forms.TextBox();
+            this.label1 = new System.Windows.Forms.Label();
+            this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.gbMonitors.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             this.groupBox1.SuspendLayout();
+            this.groupBox3.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // lbBulbs
-            // 
-            this.lbBulbs.FormattingEnabled = true;
-            this.lbBulbs.Location = new System.Drawing.Point(15, 19);
-            this.lbBulbs.Name = "lbBulbs";
-            this.lbBulbs.SelectionMode = System.Windows.Forms.SelectionMode.MultiSimple;
-            this.lbBulbs.Size = new System.Drawing.Size(188, 147);
-            this.lbBulbs.TabIndex = 2;
-            this.lbBulbs.SelectedIndexChanged += new System.EventHandler(this.lbBulbs_SelectedIndexChanged);
-            // 
-            // groupBox3
-            // 
-            this.groupBox3.Controls.Add(this.label1);
-            this.groupBox3.Controls.Add(this.tbManualBulbMac);
-            this.groupBox3.Controls.Add(this.button5);
-            this.groupBox3.Controls.Add(this.lbBulbs);
-            this.groupBox3.Location = new System.Drawing.Point(757, 12);
-            this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(219, 227);
-            this.groupBox3.TabIndex = 31;
-            this.groupBox3.TabStop = false;
-            this.groupBox3.Text = "Bulbs";
-            this.groupBox3.Visible = false;
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(12, 176);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(128, 13);
-            this.label1.TabIndex = 5;
-            this.label1.Text = "Add Manual / Virtual Bulb";
-            // 
-            // tbManualBulbMac
-            // 
-            this.tbManualBulbMac.Location = new System.Drawing.Point(15, 192);
-            this.tbManualBulbMac.Name = "tbManualBulbMac";
-            this.tbManualBulbMac.Size = new System.Drawing.Size(125, 20);
-            this.tbManualBulbMac.TabIndex = 4;
-            // 
-            // button5
-            // 
-            this.button5.Location = new System.Drawing.Point(146, 191);
-            this.button5.Name = "button5";
-            this.button5.Size = new System.Drawing.Size(55, 23);
-            this.button5.TabIndex = 3;
-            this.button5.Text = "Add";
-            this.button5.UseVisualStyleBackColor = true;
-            this.button5.Click += new System.EventHandler(this.button5_Click);
             // 
             // button7
             // 
@@ -290,6 +241,7 @@
             // 
             this.notifyIcon1.BalloonTipIcon = System.Windows.Forms.ToolTipIcon.Info;
             this.notifyIcon1.BalloonTipText = "MaxLifx-Z minimised to System Tray";
+            this.notifyIcon1.Icon = ((System.Drawing.Icon)(resources.GetObject("notifyIcon1.Icon")));
             this.notifyIcon1.Text = "notifyIcon1";
             this.notifyIcon1.Visible = true;
             this.notifyIcon1.Click += new System.EventHandler(this.notifyIcon1_Click);
@@ -312,6 +264,56 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Running Lights";
             // 
+            // lbBulbs
+            // 
+            this.lbBulbs.FormattingEnabled = true;
+            this.lbBulbs.Location = new System.Drawing.Point(15, 19);
+            this.lbBulbs.Name = "lbBulbs";
+            this.lbBulbs.SelectionMode = System.Windows.Forms.SelectionMode.MultiSimple;
+            this.lbBulbs.Size = new System.Drawing.Size(188, 147);
+            this.lbBulbs.TabIndex = 2;
+            this.lbBulbs.SelectedIndexChanged += new System.EventHandler(this.lbBulbs_SelectedIndexChanged);
+            // 
+            // button5
+            // 
+            this.button5.Location = new System.Drawing.Point(146, 191);
+            this.button5.Name = "button5";
+            this.button5.Size = new System.Drawing.Size(55, 23);
+            this.button5.TabIndex = 3;
+            this.button5.Text = "Add";
+            this.button5.UseVisualStyleBackColor = true;
+            this.button5.Click += new System.EventHandler(this.button5_Click);
+            // 
+            // tbManualBulbMac
+            // 
+            this.tbManualBulbMac.Location = new System.Drawing.Point(15, 192);
+            this.tbManualBulbMac.Name = "tbManualBulbMac";
+            this.tbManualBulbMac.Size = new System.Drawing.Size(125, 20);
+            this.tbManualBulbMac.TabIndex = 4;
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(12, 176);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(128, 13);
+            this.label1.TabIndex = 5;
+            this.label1.Text = "Add Manual / Virtual Bulb";
+            // 
+            // groupBox3
+            // 
+            this.groupBox3.Controls.Add(this.label1);
+            this.groupBox3.Controls.Add(this.tbManualBulbMac);
+            this.groupBox3.Controls.Add(this.button5);
+            this.groupBox3.Controls.Add(this.lbBulbs);
+            this.groupBox3.Location = new System.Drawing.Point(757, 12);
+            this.groupBox3.Name = "groupBox3";
+            this.groupBox3.Size = new System.Drawing.Size(219, 227);
+            this.groupBox3.TabIndex = 31;
+            this.groupBox3.TabStop = false;
+            this.groupBox3.Text = "Bulbs";
+            this.groupBox3.Visible = false;
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -321,6 +323,7 @@
             this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.menuStrip1);
             this.Controls.Add(this.gbMonitors);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MainMenuStrip = this.menuStrip1;
             this.MaximumSize = new System.Drawing.Size(450, 505);
             this.Name = "MainForm";
@@ -329,20 +332,18 @@
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
             this.Load += new System.EventHandler(this.MainForm_Load);
             this.Resize += new System.EventHandler(this.MainForm_Resize);
-            this.groupBox3.ResumeLayout(false);
-            this.groupBox3.PerformLayout();
             this.gbMonitors.ResumeLayout(false);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             this.groupBox1.ResumeLayout(false);
+            this.groupBox3.ResumeLayout(false);
+            this.groupBox3.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
         }
 
         #endregion
-        private System.Windows.Forms.ListBox lbBulbs;
-        private System.Windows.Forms.GroupBox groupBox3;
         private System.Windows.Forms.Button button7;
         private System.Windows.Forms.ListView lvThreads;
         private System.Windows.Forms.ColumnHeader columnHeader1;
@@ -362,12 +363,14 @@
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem;
         private System.Windows.Forms.NotifyIcon notifyIcon1;
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.TextBox tbManualBulbMac;
-        private System.Windows.Forms.Button button5;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
         private System.Windows.Forms.ToolStripMenuItem advancedDiscoverToolStripMenuItem;
+        private System.Windows.Forms.GroupBox groupBox3;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.TextBox tbManualBulbMac;
+        private System.Windows.Forms.Button button5;
+        private System.Windows.Forms.ListBox lbBulbs;
     }
 }
 
