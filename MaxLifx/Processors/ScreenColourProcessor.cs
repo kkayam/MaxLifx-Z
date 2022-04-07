@@ -443,7 +443,8 @@ namespace MaxLifx
             // var screenColourSet = GetScreenColours(SettingsCast.TopLeft, SettingsCast.BottomRight, screenPixel, gdest, gsrc);
             Color? avgColour = null;
             ScreenColorSet screenColourSet = null;
- 
+            Color areaColour;
+
             foreach (var label in SettingsCast.SelectedLabels)
                 {
                     var multiFlag = false;
@@ -472,15 +473,12 @@ namespace MaxLifx
                     }
                     if (found)
                     {
+
                         // our average colour pixel
-                        var screenPixel = new Bitmap(1, 1, PixelFormat.Format32bppArgb);
-                        var gdest = Graphics.FromImage(screenPixel);
-                        var gsrc = Graphics.FromHwnd(IntPtr.Zero);
-                        var srcData = screenPixel.LockBits(
-                                    new Rectangle(0, 0, screenPixel.Width, screenPixel.Height),
-                                    ImageLockMode.ReadOnly,
-                                    PixelFormat.Format32bppArgb);
-                        screenPixel.UnlockBits(srcData);
+                        var screenshot = new Bitmap(Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height, PixelFormat.Format32bppArgb);
+                        var gfx = Graphics.FromImage(screenshot);
+                        gfx.CopyFromScreen(Screen.PrimaryScreen.Bounds.Location, new Point(0, 0), Screen.PrimaryScreen.Bounds.Size);
+
 
                         UInt16[] Hue_list = new UInt16[82];
                         UInt16[] Saturation_list = new UInt16[82];
@@ -492,14 +490,12 @@ namespace MaxLifx
 
                         for (int i = 0; i < zones; i++)
                         {
-                            var areaColour = GetScreenColourZones(rectList[i], srcData, gdest, gsrc);
-
-                            // code for using most dominant colour; doesn't look very good tbh
-                            /*var bmpScreenshot = new Bitmap(rectList[i].Width, rectList[i].Height, PixelFormat.Format32bppArgb);
-                            var gfxScreenshot = Graphics.FromImage(bmpScreenshot);
-                            gfxScreenshot.CopyFromScreen(rectList[i].X, rectList[i].Y, 0, 0, rectList[i].Size, CopyPixelOperation.SourceCopy);
-                            Bitmap resized = new Bitmap(bmpScreenshot, new Size(bmpScreenshot.Width / 3, bmpScreenshot.Height / 3));
-                            var areaColour = dominantColour(resized);*/
+                            Bitmap CroppedImage = new Bitmap(rectList[i].Width, rectList[i].Height);
+                            using (Graphics g = Graphics.FromImage(CroppedImage))
+                            {
+                                g.DrawImage(screenshot, -rectList[i].X, -rectList[i].Y);
+                            }
+                            areaColour = GetAverageColor(CroppedImage,5);
 
                             if (areaColour != null)
                             {
@@ -558,6 +554,7 @@ namespace MaxLifx
                                 apply = new byte[1] { 1 }
                             };
                             bulbController.SetColour(label, zonePayload, false);
+
                         }
 
                         multiFlag = true;
@@ -618,24 +615,6 @@ namespace MaxLifx
                     };
                     bulbController.SetColour(label, payload, true);
                 }
-                // this is for when multizone apply is set to 0: need to send another packet to apply everything
-                /*else {
-                        var payload = new SetColourZonesPayload
-                        {
-                            start_index = new byte[1] { 0 },
-                            end_index = new byte[1] { 0 },
-                            Kelvin = 3500,
-                            TransitionDuration = 0,
-                            Hue = 0,
-                            Saturation = 0,
-                            Brightness = 0,
-                            // ignore this payload and apply previous ones
-                            apply = new byte[1] { 2 }
-                        };
-                        bulbController.SetColourZoneFinder(label, payload);
-                        //bulbController.SetColour(label, payload);
-                    }*/
-              //  }
             }
 
             Thread.Sleep(1000/ Math.Min(SettingsCast.Delay, 20));
@@ -659,7 +638,38 @@ namespace MaxLifx
         {
             public Color topleft, topright, bottomleft, bottomright, left, right, top, bottom, all;
         }
+        
+        public unsafe Color GetAverageColor(Bitmap image, int sampleStep = 1)
+        {
+            var data = image.LockBits(
+                new Rectangle(Point.Empty, image.Size),
+                ImageLockMode.ReadOnly,
+                PixelFormat.Format32bppArgb);
 
+            var row = (int*)data.Scan0.ToPointer();
+            var (sumR, sumG, sumB) = (0L, 0L, 0L);
+            var stride = data.Stride / sizeof(int) * sampleStep;
+
+            for (var y = 0; y < data.Height; y += sampleStep)
+            {
+                for (var x = 0; x < data.Width; x += sampleStep)
+                {
+                    var argb = row[x];
+                    sumR += (argb & 0x00FF0000) >> 16;
+                    sumG += (argb & 0x0000FF00) >> 8;
+                    sumB += argb & 0x000000FF;
+                }
+                row += stride;
+            }
+
+            image.UnlockBits(data);
+
+            var numSamples = data.Width / sampleStep * data.Height / sampleStep;
+            var avgR = Math.Min(sumR / numSamples,255);
+            var avgG = Math.Min(sumG / numSamples,255);
+            var avgB = Math.Min(sumB / numSamples,255);
+            return Color.FromArgb((int)avgR, (int)avgG, (int)avgB);
+        }
 
         private unsafe ScreenColorSet GetScreenColours(Point tl, Point br, Bitmap screenPixel, Graphics gdest, Graphics gsrc)
         {
@@ -736,7 +746,7 @@ namespace MaxLifx
             return returnValue;
         }
 
-        private unsafe Color? GetScreenColourZones(Rectangle area, BitmapData srcData, Graphics gdest, Graphics gsrc)
+        private unsafe Color GetScreenColourZones(Rectangle area, BitmapData srcData, Graphics gdest, Graphics gsrc)
         {
             IntPtr hSrcDC;
             IntPtr hDC;
@@ -745,7 +755,6 @@ namespace MaxLifx
 
             var height = area.Height;
             
-            if (height == 0 || width == 0) return null;
 
             var thumbSize = new Size(1, 1);
 

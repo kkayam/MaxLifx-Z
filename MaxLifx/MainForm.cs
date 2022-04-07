@@ -23,6 +23,7 @@ using Timer = System.Timers.Timer;
 
 namespace MaxLifx
 {
+
     public partial class MainForm : Form
     {
         private readonly MaxLifxBulbController _bulbController = new MaxLifxBulbController();

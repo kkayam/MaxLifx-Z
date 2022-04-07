@@ -30,14 +30,9 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
-            this.button7 = new System.Windows.Forms.Button();
             this.lvThreads = new System.Windows.Forms.ListView();
             this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.button8 = new System.Windows.Forms.Button();
-            this.button1 = new System.Windows.Forms.Button();
-            this.button2 = new System.Windows.Forms.Button();
-            this.button3 = new System.Windows.Forms.Button();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.bulbsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
@@ -52,22 +47,15 @@
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.lbBulbs = new System.Windows.Forms.ListBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.loadToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.button7 = new MaxLifx.Controls.RoundedButton.RoundedButton();
+            this.button1 = new MaxLifx.Controls.RoundedButton.RoundedButton();
             this.menuStrip1.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // button7
-            // 
-            this.button7.BackColor = System.Drawing.Color.Salmon;
-            this.button7.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.button7.Location = new System.Drawing.Point(271, 125);
-            this.button7.Name = "button7";
-            this.button7.Size = new System.Drawing.Size(136, 40);
-            this.button7.TabIndex = 35;
-            this.button7.Text = "Remove lights";
-            this.button7.UseVisualStyleBackColor = false;
-            this.button7.Click += new System.EventHandler(this.button7_Click);
             // 
             // lvThreads
             // 
@@ -78,11 +66,12 @@
             this.lvThreads.Location = new System.Drawing.Point(6, 19);
             this.lvThreads.MultiSelect = false;
             this.lvThreads.Name = "lvThreads";
-            this.lvThreads.Size = new System.Drawing.Size(257, 174);
+            this.lvThreads.Size = new System.Drawing.Size(401, 174);
             this.lvThreads.TabIndex = 36;
             this.lvThreads.UseCompatibleStateImageBehavior = false;
             this.lvThreads.View = System.Windows.Forms.View.Details;
             this.lvThreads.SelectedIndexChanged += new System.EventHandler(this.lvThreads_SelectedIndexChanged);
+            this.lvThreads.DoubleClick += new System.EventHandler(this.button8_Click);
             // 
             // columnHeader1
             // 
@@ -94,51 +83,10 @@
             this.columnHeader2.Text = "UUID";
             this.columnHeader2.Width = 184;
             // 
-            // button8
-            // 
-            this.button8.Location = new System.Drawing.Point(271, 72);
-            this.button8.Name = "button8";
-            this.button8.Size = new System.Drawing.Size(136, 47);
-            this.button8.TabIndex = 37;
-            this.button8.Text = "Edit lights";
-            this.button8.UseVisualStyleBackColor = true;
-            this.button8.Click += new System.EventHandler(this.button8_Click);
-            // 
-            // button1
-            // 
-            this.button1.BackColor = System.Drawing.Color.DarkSeaGreen;
-            this.button1.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.button1.Location = new System.Drawing.Point(271, 19);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(136, 47);
-            this.button1.TabIndex = 0;
-            this.button1.Text = "Add Ambient Lights";
-            this.button1.UseVisualStyleBackColor = false;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
-            // 
-            // button2
-            // 
-            this.button2.Location = new System.Drawing.Point(345, 171);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(62, 23);
-            this.button2.TabIndex = 38;
-            this.button2.Text = "Save Threadset";
-            this.button2.UseVisualStyleBackColor = true;
-            this.button2.Click += new System.EventHandler(this.button2_Click);
-            // 
-            // button3
-            // 
-            this.button3.Location = new System.Drawing.Point(271, 171);
-            this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(68, 23);
-            this.button3.TabIndex = 39;
-            this.button3.Text = "Load Threadset";
-            this.button3.UseVisualStyleBackColor = true;
-            this.button3.Click += new System.EventHandler(this.button3_Click);
-            // 
             // menuStrip1
             // 
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.fileToolStripMenuItem,
             this.bulbsToolStripMenuItem,
             this.aboutToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
@@ -164,45 +112,45 @@
             // toolStripMenuItem1
             // 
             this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-            this.toolStripMenuItem1.Size = new System.Drawing.Size(175, 22);
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(180, 22);
             this.toolStripMenuItem1.Text = "Discover";
             this.toolStripMenuItem1.Click += new System.EventHandler(this.toolStripMenuItem1_Click);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(172, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(177, 6);
             // 
             // turnOnAllToolStripMenuItem
             // 
             this.turnOnAllToolStripMenuItem.Name = "turnOnAllToolStripMenuItem";
-            this.turnOnAllToolStripMenuItem.Size = new System.Drawing.Size(175, 22);
+            this.turnOnAllToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.turnOnAllToolStripMenuItem.Text = "Turn On All";
             this.turnOnAllToolStripMenuItem.Click += new System.EventHandler(this.turnOnAllToolStripMenuItem_Click);
             // 
             // turnOffAllToolStripMenuItem
             // 
             this.turnOffAllToolStripMenuItem.Name = "turnOffAllToolStripMenuItem";
-            this.turnOffAllToolStripMenuItem.Size = new System.Drawing.Size(175, 22);
+            this.turnOffAllToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.turnOffAllToolStripMenuItem.Text = "Turn Off All";
             this.turnOffAllToolStripMenuItem.Click += new System.EventHandler(this.turnOffAllToolStripMenuItem_Click);
             // 
             // panicToolStripMenuItem
             // 
             this.panicToolStripMenuItem.Name = "panicToolStripMenuItem";
-            this.panicToolStripMenuItem.Size = new System.Drawing.Size(175, 22);
+            this.panicToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.panicToolStripMenuItem.Text = "Panic";
             this.panicToolStripMenuItem.Click += new System.EventHandler(this.panicToolStripMenuItem_Click);
             // 
             // toolStripSeparator2
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(172, 6);
+            this.toolStripSeparator2.Size = new System.Drawing.Size(177, 6);
             // 
             // advancedDiscoverToolStripMenuItem
             // 
             this.advancedDiscoverToolStripMenuItem.Name = "advancedDiscoverToolStripMenuItem";
-            this.advancedDiscoverToolStripMenuItem.Size = new System.Drawing.Size(175, 22);
+            this.advancedDiscoverToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.advancedDiscoverToolStripMenuItem.Text = "Advanced Discover";
             this.advancedDiscoverToolStripMenuItem.Click += new System.EventHandler(this.advancedDiscoverToolStripMenuItem_Click);
             // 
@@ -227,12 +175,9 @@
             // 
             // groupBox1
             // 
-            this.groupBox1.Controls.Add(this.button2);
+            this.groupBox1.Controls.Add(this.button7);
             this.groupBox1.Controls.Add(this.button1);
             this.groupBox1.Controls.Add(this.lvThreads);
-            this.groupBox1.Controls.Add(this.button3);
-            this.groupBox1.Controls.Add(this.button8);
-            this.groupBox1.Controls.Add(this.button7);
             this.groupBox1.Location = new System.Drawing.Point(9, 31);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(413, 200);
@@ -261,6 +206,53 @@
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Bulbs";
             // 
+            // fileToolStripMenuItem
+            // 
+            this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.loadToolStripMenuItem,
+            this.saveToolStripMenuItem});
+            this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
+            this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
+            this.fileToolStripMenuItem.Text = "File";
+            // 
+            // loadToolStripMenuItem
+            // 
+            this.loadToolStripMenuItem.Name = "loadToolStripMenuItem";
+            this.loadToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.loadToolStripMenuItem.Text = "Load";
+            this.loadToolStripMenuItem.Click += new System.EventHandler(this.button3_Click);
+            // 
+            // saveToolStripMenuItem
+            // 
+            this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
+            this.saveToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.saveToolStripMenuItem.Text = "Save";
+            this.saveToolStripMenuItem.Click += new System.EventHandler(this.button2_Click);
+            // 
+            // button7
+            // 
+            this.button7.BackColor = System.Drawing.Color.Salmon;
+            this.button7.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.button7.Location = new System.Drawing.Point(281, 132);
+            this.button7.Name = "button7";
+            this.button7.Size = new System.Drawing.Size(50, 50);
+            this.button7.TabIndex = 41;
+            this.button7.Text = "➖";
+            this.button7.UseVisualStyleBackColor = false;
+            this.button7.Click += new System.EventHandler(this.button7_Click);
+            // 
+            // button1
+            // 
+            this.button1.BackColor = System.Drawing.Color.DarkSeaGreen;
+            this.button1.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.button1.Location = new System.Drawing.Point(337, 132);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(50, 50);
+            this.button1.TabIndex = 40;
+            this.button1.Text = "➕";
+            this.button1.UseVisualStyleBackColor = false;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -288,14 +280,9 @@
         }
 
         #endregion
-        private System.Windows.Forms.Button button7;
         private System.Windows.Forms.ListView lvThreads;
         private System.Windows.Forms.ColumnHeader columnHeader1;
         private System.Windows.Forms.ColumnHeader columnHeader2;
-        private System.Windows.Forms.Button button8;
-        private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.Button button2;
-        private System.Windows.Forms.Button button3;
         private System.Windows.Forms.MenuStrip menuStrip1;
         private System.Windows.Forms.ToolStripMenuItem bulbsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem turnOnAllToolStripMenuItem;
@@ -310,6 +297,11 @@
         private System.Windows.Forms.ToolStripMenuItem advancedDiscoverToolStripMenuItem;
         private System.Windows.Forms.ListBox lbBulbs;
         private System.Windows.Forms.GroupBox groupBox2;
+        private Controls.RoundedButton.RoundedButton button1;
+        private Controls.RoundedButton.RoundedButton button7;
+        private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem loadToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem saveToolStripMenuItem;
     }
 }
 
