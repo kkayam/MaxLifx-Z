@@ -10,6 +10,7 @@ This is a fork of the original MaxLifx-Z with one important improvement: SetExte
 - Brand new design for usability and again, focus on ambient lights (Screen colour lights)
 - New icon
 - Code cleanup for new focus on ambient lights (Screen colour lights)
+- Quality of life improvements, e.g. name a threadsave "default" and the software will automatically load those threads on program start.
 
 
 ## Ambilight Setup
