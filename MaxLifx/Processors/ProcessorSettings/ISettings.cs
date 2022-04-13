@@ -8,6 +8,7 @@ namespace MaxLifx.Processors.ProcessorSettings
         string FileExtension { get; }
         string OnTimes { get; set; }
         string OffTimes { get; set; }
+
         bool OffOrOn();
     }
 }

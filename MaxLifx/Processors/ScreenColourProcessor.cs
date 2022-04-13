@@ -507,7 +507,7 @@ namespace MaxLifx
                                     double saturation = 0;
                                     double brightness = 0;
                                     Utils.ColorToHSV((Color)avgZoneColour, out hue, out saturation, out brightness);
-                                    brightness = (brightness * (SettingsCast.Brightness - SettingsCast.MinBrightness));
+                                    brightness = (brightness * (SettingsCast.Brightness - SettingsCast.MinBrightness)) * SettingsCast.GlobalBrightness;
                                     saturation = (saturation * (SettingsCast.Saturation - SettingsCast.MinSaturation));
                                     Hue_list[i] = (UInt16)hue;
                                     Saturation_list[i] = (UInt16)saturation;
@@ -521,7 +521,7 @@ namespace MaxLifx
                                     double saturation = 0;
                                     double brightness = 0;
                                     Utils.ColorToHSV((Color)avgZoneColour, out hue, out saturation, out brightness);
-                                    brightness = (brightness * (SettingsCast.Brightness - SettingsCast.MinBrightness) + SettingsCast.MinBrightness);
+                                    brightness = (brightness * (SettingsCast.Brightness - SettingsCast.MinBrightness) + SettingsCast.MinBrightness) * SettingsCast.GlobalBrightness;
                                     saturation = (saturation * (SettingsCast.Saturation - SettingsCast.MinSaturation) + SettingsCast.MinSaturation);
                                     var zonePayload = new SetColourZonesPayload
                                     {
@@ -603,7 +603,7 @@ namespace MaxLifx
                     double saturation = 0;
                     double brightness = 0;
                     Utils.ColorToHSV((Color)avgColour, out hue, out saturation, out brightness);
-                    brightness = (brightness * (SettingsCast.Brightness - SettingsCast.MinBrightness) + SettingsCast.MinBrightness);
+                    brightness = (brightness * (SettingsCast.Brightness - SettingsCast.MinBrightness) + SettingsCast.MinBrightness) * SettingsCast.GlobalBrightness;
                     saturation = (saturation * (SettingsCast.Saturation - SettingsCast.MinSaturation) + SettingsCast.MinSaturation);
                     var payload = new SetColourPayload
                     {
@@ -617,7 +617,8 @@ namespace MaxLifx
                 }
             }
 
-            Thread.Sleep(1000/ Math.Min(SettingsCast.Delay, 20));
+            float delay = 1000 / Math.Min(SettingsCast.Delay * SettingsCast.GlobalUpdateRate+1, 20);
+            Thread.Sleep((int)Math.Round(delay));
         }
 
         #region

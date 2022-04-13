@@ -6,6 +6,8 @@ namespace MaxLifx.Processors.ProcessorSettings
     {
         public Point BottomRight = new Point(450, 300);
         public int Brightness = 65535;
+        public float GlobalBrightness = 1;
+        public float GlobalUpdateRate = 1;
         public int Kelvin = 3500;
         public int Delay = 20;
         public int Fade = 150;

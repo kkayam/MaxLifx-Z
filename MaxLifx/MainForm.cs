@@ -17,9 +17,7 @@ using MaxLifx.Controls;
 using MaxLifx.Payload;
 using MaxLifx.Threads;
 using MaxLifx.UIs;
-using NAudio.Wave;
 using Newtonsoft.Json;
-using Timer = System.Timers.Timer;
 
 namespace MaxLifx
 {
@@ -27,49 +25,18 @@ namespace MaxLifx
     public partial class MainForm : Form
     {
         private readonly MaxLifxBulbController _bulbController = new MaxLifxBulbController();
-        private bool _suspendUi = true;
-        private readonly LightControlThreadCollection _threadCollection = new LightControlThreadCollection();
+        Dictionary<string, LightControlThread> _threads = new Dictionary<string, LightControlThread>();
         private readonly Random _r = new Random();
-        public readonly decimal Version = 1.1m;
-        private Timer _schedulerTimer = new Timer();
-        private MaxLifxSettings _settings = new MaxLifxSettings();
         public MainForm()
         {
-            if (!Directory.Exists(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "\\MaxLifx"))
-                Directory.CreateDirectory(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "\\MaxLifx");
-
-            if (
-                !Directory.Exists(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "\\MaxLifx\\Sounds"))
-                Directory.CreateDirectory(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) +
-                                          "\\MaxLifx\\Sounds");
-
-            if (
-                !Directory.Exists(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) +
-                                  "\\MaxLifx\\Sounds\\Loops"))
-                Directory.CreateDirectory(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) +
-                                          "\\MaxLifx\\Sounds\\Loops");
-
-            if (
-                !Directory.Exists(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) +
-                                  "\\MaxLifx\\Sounds\\Random"))
-                Directory.CreateDirectory(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) +
-                                          "\\MaxLifx\\Sounds\\Random");
 
             InitializeComponent();
-            _suspendUi = true;
             _bulbController.SetupNetwork();
             
             // try and load settings
-            if (File.Exists("Settings.xml"))
+            if (File.Exists("settings.json"))
             {
                 LoadSettings();
-
-                PopulateBulbListbox();
-
-
-                for (var i = 0; i < lbBulbs.Items.Count; i++)
-                    if (_settings.SelectedLabels.Contains(lbBulbs.Items[i].ToString()))
-                        lbBulbs.SelectedItems.Add(lbBulbs.Items[i]);
             }
 
             if (_bulbController.Bulbs.Count == 0)
@@ -90,107 +57,39 @@ namespace MaxLifx
                         MessageBox.Show("No bulbs found. If you have just received a Windows Firewall popup, try Bulbs -> Discover Bulbs now.");
                     }
 
-                    PopulateBulbListbox();
-                    _suspendUi = false;
                     SaveSettings();
-                    _suspendUi = true;
 
                 }
             }
 
-            _suspendUi = false;
-            if (File.Exists("default.MaxLifx.Threadset.xml"))
+            if (File.Exists("default.json"))
             {
                 StopAllThreads();
-                LoadThreads("default.MaxLifx.Threadset.xml");
+                LoadThreads("default.json");
             }
-            Microsoft.Win32.SystemEvents.SessionEnded += new Microsoft.Win32.SessionEndedEventHandler(SystemEvents_SessionEnded);
-            Microsoft.Win32.SystemEvents.PowerModeChanged += new Microsoft.Win32.PowerModeChangedEventHandler(OnPowerModeChanged);
-
-
+            Text = "MaxLifx-Z (" + _bulbController.Bulbs.Count.ToString() + ")";
         }
 
-        void SystemEvents_SessionEnded(object sender, Microsoft.Win32.SessionEndedEventArgs e)
+
+
+        private void StartNewThread(Thread thread, string threadName, ScreenColourProcessor processor)
         {
-            TurnAllBulbsOff();
-        }
+            var NewLightControlThread = new LightControlThread(thread, threadName, processor);
+            _threads.Add(NewLightControlThread.Uuid, NewLightControlThread);
 
-        private void OnPowerModeChanged(object sender, Microsoft.Win32.PowerModeChangedEventArgs e)
-        {
-            switch (e.Mode)
-            {
-                case Microsoft.Win32.PowerModes.Resume:
-                    TurnAllBulbsOn();
-                    break;
-
-                case Microsoft.Win32.PowerModes.Suspend:
-                    TurnAllBulbsOff();
-                    break;
-            }
-        }
-
-        private void B_Click(object sender, EventArgs e)
-        {
-            var fakeBulb = new FakeBulb(_bulbController, ((Button) sender).Text) {Text = ((Button) sender).Text};
-            fakeBulb.Show();
-        }
-
-        private void B_Click2(object sender, EventArgs e)
-        {
-            var fakeBulb = new FakeBulb(_bulbController, ((PictureBox)sender).Text) { Text = ((PictureBox)sender).Text };
-            fakeBulb.Show();
-        }
-
-        private void StartNewThread(Thread thread, string threadName, IProcessor processor)
-        {
-            //thread.SetApartmentState(ApartmentState.STA);
-
-            var newThread = thread;
-            var newLightThread = _threadCollection.AddThread(newThread, threadName, processor);
-
-            var lvi = new ListViewItem(newLightThread.Name);
-            lvi.SubItems.Add(newLightThread.Uuid);
+            var lvi = new ListViewItem(NewLightControlThread.Name);
+            lvi.SubItems.Add(NewLightControlThread.Uuid);
             lvThreads.Items.Add(lvi);
-            newLightThread.Start();
+            NewLightControlThread.Start();
         }
 
-        private void LoadSettings(string filename = "Settings.xml")
+        private void LoadSettings(string filename = "settings.json")
         {
-            var xmlDocument = new XmlDocument();
-            xmlDocument.Load(filename);
-            var xmlString = xmlDocument.OuterXml;
-
-            using (var read = new StringReader(xmlString))
-            {
-                var outType = typeof (MaxLifxSettings);
-
-                var serializer = new XmlSerializer(outType);
-                using (XmlReader reader = new XmlTextReader(read))
-                {
-                    _settings = (MaxLifxSettings) serializer.Deserialize(reader);
-                    reader.Close();
-                }
-
-                read.Close();
-            }
-
-            _bulbController.Bulbs = _settings.Bulbs;
+            var Bulbs = JsonConvert.DeserializeObject<List<Bulb>>(File.ReadAllText(filename));
+            _bulbController.Bulbs = Bulbs;
+            Text = "MaxLifx-Z (" + _bulbController.Bulbs.Count.ToString() + ")";
         }
 
-        private void PopulateBulbListbox()
-        {
-            lbBulbs.Items.Clear();
-            Text = $"MaxLifx-Z : {_bulbController.Bulbs.Count} bulbs (";
-            int ctr = 0;
-            foreach (var b in _bulbController.Bulbs.OrderBy(x => x.Label))
-            {
-                Text += b.Label;
-                lbBulbs.Items.Add(b.Label);
-                ctr++;
-                if (_bulbController.Bulbs.Count != ctr) Text += ", ";
-            }
-            Text += ")";
-        }
 
         private void button1_Click(object sender, EventArgs e)
         {
@@ -200,118 +99,33 @@ namespace MaxLifx
             StartNewThread(thread, "Ambient Lights", processor);
         }
 
-        private void lbBulbs_SelectedIndexChanged(object sender, EventArgs e)
+        private void SaveThreads(string filename = "threads.json")
         {
-            if (!_suspendUi)
+            var threads_json = JsonConvert.SerializeObject(_threads);
+            File.WriteAllText(filename, threads_json);
+        }
+
+        private void LoadThreads(string filename = "threads.json")
+        {
+            var loaded_threads = JsonConvert.DeserializeObject<Dictionary<string, LightControlThread>>(File.ReadAllText(filename));
+            Thread t = null;
+            foreach (LightControlThread thread in loaded_threads.Values.ToList())
             {
-                _settings.SelectedLabels.Clear();
-
-                var macAddress = lbBulbs.SelectedItems;
-
-                foreach (var x in macAddress)
-                    _settings.SelectedLabels.Add(x.ToString());
-
-                SaveSettings();
+                t = new Thread(() => ((ScreenColourProcessor)(thread.Processor)).ScreenColour(_bulbController, new Random(_r.Next())));
+                StartNewThread(t, thread.Name, thread.Processor);
             }
         }
 
-
-        private void SaveThreads(string filename = "Threads.xml")
+        private void SaveSettings(string filename = "settings.json")
         {
-            if (!_suspendUi)
-            {
-                var xml = new XmlSerializer(typeof (LightControlThreadCollection));
-
-                using (var stream = new MemoryStream())
-                {
-                    xml.Serialize(stream, _threadCollection);
-                    stream.Position = 0;
-                    var xmlDocument = new XmlDocument();
-                    xmlDocument.Load(stream);
-                    xmlDocument.Save(filename);
-                    stream.Close();
-                }
-            }
-        }
-
-        private void LoadThreads(string filename = "Threads.xml")
-        {
-            if (InvokeRequired) // Line #1
-            {
-                LoadThreadsDelegate d = LoadThreads;
-                Invoke(d, filename);
-                return;
-            }
-
-            if (!_suspendUi)
-            {
-                var xmlDocument = new XmlDocument();
-                if (File.Exists(filename))
-                {
-                    xmlDocument.Load(filename);
-                    var xmlString = xmlDocument.OuterXml;
-
-                    using (var read = new StringReader(xmlString))
-                    {
-                        var outType = typeof (LightControlThreadCollection);
-
-                        LightControlThreadCollection loadedThreadCollection;
-
-                        var serializer = new XmlSerializer(outType);
-                        using (XmlReader reader = new XmlTextReader(read))
-                        {
-                            loadedThreadCollection = (LightControlThreadCollection) serializer.Deserialize(reader);
-                            reader.Close();
-                        }
-
-                        foreach (var lightThread in loadedThreadCollection.LightControlThreads)
-                        {
-                            Thread t = null;
-
-                            switch (lightThread.Processor.GetType().ToString())
-                            {
-                                case "MaxLifx.ScreenColourProcessor":
-                                    t =
-                                        new Thread(
-                                            () =>
-                                                ((ScreenColourProcessor) (lightThread.Processor)).ScreenColour(
-                                                    _bulbController, new Random(_r.Next())));
-                                    break;
-                            }
-
-                            var threadName = lightThread.Name;
-                            StartNewThread(t, threadName, lightThread.Processor);
-                        }
-
-                        read.Close();
-                    }
-                }
-            }
-        }
-
-        private void SaveSettings(string filename = "Settings.xml")
-        {
-            if (!_suspendUi)
-            {
-                var xml = new XmlSerializer(typeof (MaxLifxSettings));
-                _settings.Bulbs = _bulbController.Bulbs;
-
-                using (var stream = new MemoryStream())
-                {
-                    xml.Serialize(stream, _settings);
-                    stream.Position = 0;
-                    var xmlDocument = new XmlDocument();
-                    xmlDocument.Load(stream);
-                    xmlDocument.Save(filename);
-                    stream.Close();
-                }
-            }
+            var settings_json = JsonConvert.SerializeObject(_bulbController.Bulbs);
+            File.WriteAllText(filename, settings_json);
         }
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
-            foreach (ListViewItem x in lvThreads.Items)
-                _threadCollection.GetThread(x.SubItems[1].Text).Abort();
+            foreach (LightControlThread thread in _threads.Values)
+                thread.Abort();
         }
 
         private void button7_Click(object sender, EventArgs e)
@@ -319,9 +133,9 @@ namespace MaxLifx
             if (lvThreads.SelectedItems.Count == 0) return;
             var selectedThreadUuid = lvThreads.SelectedItems[0].SubItems[1].Text;
             if (lvThreads == null) return;
-            var thread = _threadCollection.GetThread(selectedThreadUuid);
+            var thread = _threads[selectedThreadUuid];
             thread.Abort();
-            _threadCollection.RemoveThread(selectedThreadUuid);
+            _threads.Remove(selectedThreadUuid);
             lvThreads.Items.Remove(lvThreads.SelectedItems[0]);
         }
 
@@ -342,14 +156,14 @@ namespace MaxLifx
             }
             else selectedThreadUuid = lvThreads.SelectedItems[0].SubItems[1].Text;
             if (lvThreads == null) return;
-            var thread = _threadCollection.GetThread(selectedThreadUuid);
+            var thread = _threads[selectedThreadUuid];
             thread.Processor.ShowUI = true;
         }
 
         private void button2_Click(object sender, EventArgs e)
         {
-            var s = new SaveFileDialog {DefaultExt = ".MaxLifx.Threadset.xml"};
-            s.Filter = "XML files (*.MaxLifx.Threadset.xml)|*.MaxLifx.Threadset.xml";
+            var s = new SaveFileDialog {DefaultExt = ".json"};
+            s.Filter = "Json (*.json)|*.json";
             s.InitialDirectory = Directory.GetCurrentDirectory();
             s.AddExtension = true;
 
@@ -360,8 +174,8 @@ namespace MaxLifx
         private void button3_Click(object sender, EventArgs e)
         {
 
-            var s = new OpenFileDialog { DefaultExt = ".MaxLifx.Threadset.xml" };
-            s.Filter = "XML files (*.MaxLifx.Threadset.xml)|*.MaxLifx.Threadset.xml";
+            var s = new OpenFileDialog { DefaultExt = ".json" };
+            s.Filter = "Json (*.json)|*.json";
             s.InitialDirectory = Directory.GetCurrentDirectory();
             s.AddExtension = true;
 
@@ -373,20 +187,9 @@ namespace MaxLifx
 
         private void StopAllThreads()
         {
-            if (InvokeRequired) // Line #1
-            {
-                StopAllThreadsDelegate d = StopAllThreads;
-                Invoke(d);
-            }
-
-            for (var i = 0; i < lvThreads.Items.Count; i++)
-            {
-                var selectedThreadUuid = lvThreads.Items[i].SubItems[1].Text;
-                var thread = _threadCollection.GetThread(selectedThreadUuid);
+            foreach (LightControlThread thread in _threads.Values)
                 thread.Abort();
-
-                _threadCollection.RemoveThread(selectedThreadUuid);
-            }
+            _threads.Clear();
             lvThreads.Items.Clear();
         }
 
@@ -439,68 +242,13 @@ namespace MaxLifx
             }
         }
 
-
-
-   
-
-
         private void MainForm_Load(object sender, EventArgs e)
         {
             try
             {
                 TurnAllBulbsOn();
-                string sURL;
-                sURL = @"https://api.github.com/repos/gitCommitWiL/MaxLifx-Z/releases";
-                string response;
-
-                var webRequest = WebRequest.Create(sURL) as HttpWebRequest;
-                webRequest.Method = "GET";
-                webRequest.ServicePoint.Expect100Continue = false;
-                webRequest.UserAgent = "YourAppName";
-
-                decimal maxVersion = -1;
-
-                using (var responseReader = new StreamReader(webRequest.GetResponse().GetResponseStream()))
-                    response = responseReader.ReadToEnd();
-
-                dynamic data = JsonConvert.DeserializeObject<dynamic>(response);
-
-                var ci = (CultureInfo) CultureInfo.CurrentCulture.Clone();
-                ci.NumberFormat.CurrencyDecimalSeparator = ".";
-
-                dynamic releaseDetails = null;
-
-                foreach (var x in data)
-                {
-                    string release = x.tag_name;
-
-                    var thisVersion = decimal.Parse(release, NumberStyles.Any, ci);
-                    if (maxVersion < thisVersion)
-                    {
-                        maxVersion = thisVersion;
-                        releaseDetails = x;
-                    }
-                }
-
-                if (Version < maxVersion)
-                {
-                    var dialogResult =
-                        MessageBox.Show(
-                            "Newer version found! Quit MaxLifx and browse to GitHub to download it?\r\n\r\nv" +
-                            maxVersion +
-                            ":\r\n" + releaseDetails.body, "Update?",
-                            MessageBoxButtons.YesNo);
-
-                    if (dialogResult == DialogResult.Yes)
-                    {
-                        Process.Start(@"https://github.com/gitCommitWiL/MaxLifx-Z/releases");
-                        Application.Exit();
-                    }
-                }
             }
-            catch
-            {
-            }
+            catch { }
         }
 
         private void turnOnAllToolStripMenuItem_Click(object sender, EventArgs e)
@@ -526,25 +274,16 @@ namespace MaxLifx
             {
                 MessageBox.Show("No bulbs found. If you have just received a Windows Firewall popup, try Bulbs -> Discover Bulbs now.");
             }
-            PopulateBulbListbox();
 
-            _suspendUi = false;
+            Text = "MaxLifx-Z (" + _bulbController.Bulbs.Count.ToString() + ")";
+
             SaveSettings();
-            _suspendUi = true;
         }
 
         private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
         {
             new About().Show();
         }
-
-        private delegate void BulbControllerOnColourSetDelegate(object sender, EventArgs eventArgs);
-
-        private delegate void LoadThreadsDelegate(string filename);
-
-        private delegate void StopAllThreadsDelegate();
-
-        private delegate void SetSchedulerTimeTextBoxDelegate(TimeSpan elapsedTime);
 
         private void MainForm_Resize(object sender, EventArgs e)
         {
@@ -581,32 +320,22 @@ namespace MaxLifx
             notifyIcon1_MouseDoubleClick(sender, e);
         }
 
-        private void advancedDiscoverToolStripMenuItem_Click(object sender, EventArgs e)
+        private void knobControl1_ValueChanged(object Sender)
         {
-            _bulbController.DiscoverBulbs(ConfigurationManager.AppSettings["subnet"]);
-
-            if (_bulbController.Bulbs.Count == 0)
+            foreach (LightControlThread thread in _threads.Values)
             {
-                MessageBox.Show("No bulbs found. If you have just received a Windows Firewall popup, try Bulbs -> Discover Bulbs now.");
+                float val = knobControl1.Value;
+                thread.Processor.SettingsCast.GlobalBrightness = (val / 100);
             }
-            PopulateBulbListbox();
+        }
 
-            _suspendUi = false;
-            SaveSettings();
-            _suspendUi = true;
-            //Form2 testDialog = new Form2();
-            //
-            //// Show testDialog as a modal dialog and determine if DialogResult = OK.
-            //if (testDialog.ShowDialog(this) == DialogResult.OK)
-            //{
-            //    // Read the contents of testDialog's TextBox.
-            //    this.txtResult.Text = testDialog.TextBox1.Text;
-            //}
-            //else
-            //{
-            //    this.txtResult.Text = "Cancelled";
-            //}
-            //testDialog.Dispose();
+        private void knobControl2_ValueChanged(object Sender)
+        {
+            foreach (LightControlThread thread in _threads.Values)
+            {
+                float val = knobControl2.Value;
+                thread.Processor.SettingsCast.GlobalUpdateRate = (val / 20);
+            }
         }
     }
 }

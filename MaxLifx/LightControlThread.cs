@@ -14,7 +14,7 @@ namespace MaxLifx
         {
         }
 
-        public LightControlThread(Thread thread, string name, IProcessor processor)
+        public LightControlThread(Thread thread, string name, ScreenColourProcessor processor)
         {
             Thread = thread;
             Uuid = Guid.NewGuid().ToString();
@@ -27,7 +27,7 @@ namespace MaxLifx
         public string Name { get; set; }
 
         [XmlIgnore]
-        public IProcessor Processor { get; private set; }
+        public ScreenColourProcessor Processor { get; private set; }
 
         [XmlElement("Processor")]
         public string ProcessorSerialized
@@ -44,7 +44,7 @@ namespace MaxLifx
                 var processorName = "MaxLifx." + typeName.Replace("Settings", "Processor");
                 var processorType = Type.GetType(processorName);
                 var processorConstructor = processorType.GetConstructor(Type.EmptyTypes);
-                Processor = (IProcessor) (processorConstructor.Invoke(new object[] {}));
+                Processor = (ScreenColourProcessor) (processorConstructor.Invoke(new object[] {}));
 
                 Processor.SettingsAsXml = value;
             }
@@ -72,7 +72,7 @@ namespace MaxLifx
 
         public List<LightControlThread> LightControlThreads { get; set; }
 
-        public LightControlThread AddThread(Thread thread, string name, IProcessor processor)
+        public LightControlThread AddThread(Thread thread, string name, ScreenColourProcessor processor)
         {
             var lightControlThread = new LightControlThread(thread, name, processor);
             LightControlThreads.Add(lightControlThread);

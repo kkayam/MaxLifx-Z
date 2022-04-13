@@ -210,6 +210,7 @@
             this.brightness.Size = new System.Drawing.Size(248, 20);
             this.brightness.TabIndex = 38;
             this.brightness.Value = 65535;
+            this.brightness.Scroll += new System.EventHandler(this.brightness_Scroll);
             this.brightness.ValueChanged += new System.EventHandler(this.pos_TextChanged);
             // 
             // kelvin

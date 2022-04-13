@@ -168,6 +168,11 @@ namespace MaxLifx.UIs
             SuspendUI = false;
             ProcessorBase.SaveSettings(Settings, null);
         }
+        public void change_brightness(int brightval)
+        {
+            Settings.Brightness = Math.Min(brightval, 65535);
+            ProcessorBase.SaveSettings(Settings, null);
+        }
 
         private void lbLabels_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -226,6 +231,11 @@ namespace MaxLifx.UIs
         }
 
         private void ScreenColourUI_Load(object sender, EventArgs e)
+        {
+
+        }
+
+        private void brightness_Scroll(object sender, EventArgs e)
         {
 
         }
