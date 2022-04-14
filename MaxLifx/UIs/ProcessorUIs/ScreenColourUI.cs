@@ -1,23 +1,43 @@
-﻿using System;
+﻿using MaxLifx.Controllers;
+using MaxLifx.Payload;
+using MaxLifx.Processors.ProcessorSettings;
+using MaxLifx.Threads;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
-using System.IO;
 using System.Linq;
-using System.Threading;
 using System.Windows.Forms;
-using MaxLifx.Processors.ProcessorSettings;
-using MaxLifx.Threads;
-using MaxLifx.Controllers;
-using MaxLifx.Payload;
 
 namespace MaxLifx.UIs
 {
-    public partial class ScreenColourUI : UiFormBase
+    public partial class ScreenColourUI : Form
     {
         private readonly ScreenColourSettings Settings;
         private MaxLifxBulbController BulbController;
-        private Form2 _f;
+        private ZoneSelector _f;
+
+        public List<string> SelectedLabels { get; set; } = new List<string>();
+
+        public void SetupLabels(ListBox lbLabels, List<string> labels, ISettings settings)
+        {
+            if (labels != null)
+            {
+                lbLabels.Items.Clear();
+
+                foreach (var label in labels.OrderBy(x => x))
+                    lbLabels.Items.Add(label);
+            }
+            else lbLabels.SelectedItems.Clear();
+
+            for (var i = 0; i < lbLabels.Items.Count; i++)
+            {
+                if (settings.SelectedLabels.Contains(lbLabels.Items[i].ToString()))
+                {
+                    lbLabels.SelectedItems.Add(lbLabels.Items[i]);
+                }
+            }
+        }
 
         public ScreenColourUI(ScreenColourSettings settings, MaxLifxBulbController bulbController)
         {
@@ -36,7 +56,7 @@ namespace MaxLifx.UIs
         private void button5_Click(object sender, EventArgs e)
         {
             if (_f != null) return;
-            _f = new Form2();
+            _f = new ZoneSelector();
             _f.Opacity = .5;
             _f.ResizeEnd += F_ResizeEnd;
             _f.Move += F_ResizeEnd;
@@ -59,7 +79,8 @@ namespace MaxLifx.UIs
             Settings.BottomRight = new Point(_f.Location.X + _f.Size.Width - 6, _f.Location.Y + _f.Size.Height - 6);
             SetPositionTextBoxesFromSettings();
             SuspendUI = false;
-            if (Settings.MultiColourZones.Any()){
+            if (Settings.MultiColourZones.Any())
+            {
                 // send colour to first zone so can match to an area
                 foreach (var label in Settings.SelectedLabels)
                 {
@@ -70,15 +91,15 @@ namespace MaxLifx.UIs
                         // set first zone to green
                         var payload = new SetColourZonesPayload
                         {
-                            start_index = new byte[1] {0},
-                            end_index = new byte[1] {0},
+                            start_index = new byte[1] { 0 },
+                            end_index = new byte[1] { 0 },
                             Kelvin = 3500,
                             TransitionDuration = 150,
                             Hue = (int)Color.FromArgb(255, 0, 200, 0).GetHue(),
                             Saturation = 65535,
                             Brightness = 65535,
                             // don't apply yet
-                            apply = new byte[1]{0}
+                            apply = new byte[1] { 0 }
                         };
                         BulbController.SetColour(label, payload, false);
 
@@ -86,7 +107,7 @@ namespace MaxLifx.UIs
                         payload = new SetColourZonesPayload
                         {
                             start_index = new byte[1] { 1 },
-                            end_index = new byte[1] { (byte) (zones - 1) },
+                            end_index = new byte[1] { (byte)(zones - 1) },
                             Kelvin = 3500,
                             TransitionDuration = 150,
                             Hue = 0,
@@ -138,7 +159,7 @@ namespace MaxLifx.UIs
                 delayval = 20,
                 brightval = 32767,
                 satval = 32767,
-                minbrightval  = 0,
+                minbrightval = 0,
                 minsatval = 0,
                 kelvinval = 3500;
 
@@ -157,13 +178,13 @@ namespace MaxLifx.UIs
 
             Settings.TopLeft = new Point(tlxval, tlyval);
             Settings.BottomRight = new Point(brxval, bryval);
-            Settings.Fade = Math.Max(fadeval ,0);
+            Settings.Fade = Math.Max(fadeval, 0);
             Settings.Delay = Math.Max(delayval, 0);
             Settings.Saturation = Math.Min(satval, 65535);
             Settings.Brightness = Math.Min(brightval, 65535);
             Settings.MinSaturation = Math.Min(Math.Max(minsatval, 0), Settings.Saturation);
             Settings.MinBrightness = Math.Min(Math.Max(minbrightval, 0), Settings.Brightness);
-            Settings.Kelvin = Math.Min(Math.Max(kelvinval, 2500),9000);
+            Settings.Kelvin = Math.Min(Math.Max(kelvinval, 2500), 9000);
 
             SuspendUI = false;
             ProcessorBase.SaveSettings(Settings, null);
@@ -186,48 +207,48 @@ namespace MaxLifx.UIs
                 Settings.SelectedLabels = selectedLabels;
             }
         }
-            private void btnMonitor1_Click(object sender, EventArgs e)
+        private void btnMonitor1_Click(object sender, EventArgs e)
         {
-        this.GetSizeFromMonitor(((IEnumerable<Screen>) Screen.AllScreens).Single<Screen>((Func<Screen, bool>) (x => x.Primary)));
+            this.GetSizeFromMonitor(((IEnumerable<Screen>)Screen.AllScreens).Single<Screen>((Func<Screen, bool>)(x => x.Primary)));
         }
 
         private void GetSizeFromMonitor(Screen monitor)
         {
-        this.SuspendUI = true;
-        ScreenColourSettings settings1 = this.Settings;
-        Rectangle bounds1 = monitor.Bounds;
-        int x1 = bounds1.X;
-        bounds1 = monitor.Bounds;
-        int y1 = bounds1.Y;
-        Point point1 = new Point(x1, y1);
-        settings1.TopLeft = point1;
-        ScreenColourSettings settings2 = this.Settings;
-        Rectangle bounds2 = monitor.Bounds;
-        int x2 = bounds2.X;
-        bounds2 = monitor.Bounds;
-        int width = bounds2.Width;
-        int x3 = x2 + width;
-        bounds2 = monitor.Bounds;
-        int y2 = bounds2.Y;
-        bounds2 = monitor.Bounds;
-        int height = bounds2.Height;
-        int y3 = y2 + height;
-        Point point2 = new Point(x3, y3);
-        settings2.BottomRight = point2;
-        this.SetPositionTextBoxesFromSettings();
-        this.SuspendUI = false;
-        ProcessorBase.SaveSettings<ScreenColourSettings>(this.Settings, (string) null);
+            this.SuspendUI = true;
+            ScreenColourSettings settings1 = this.Settings;
+            Rectangle bounds1 = monitor.Bounds;
+            int x1 = bounds1.X;
+            bounds1 = monitor.Bounds;
+            int y1 = bounds1.Y;
+            Point point1 = new Point(x1, y1);
+            settings1.TopLeft = point1;
+            ScreenColourSettings settings2 = this.Settings;
+            Rectangle bounds2 = monitor.Bounds;
+            int x2 = bounds2.X;
+            bounds2 = monitor.Bounds;
+            int width = bounds2.Width;
+            int x3 = x2 + width;
+            bounds2 = monitor.Bounds;
+            int y2 = bounds2.Y;
+            bounds2 = monitor.Bounds;
+            int height = bounds2.Height;
+            int y3 = y2 + height;
+            Point point2 = new Point(x3, y3);
+            settings2.BottomRight = point2;
+            this.SetPositionTextBoxesFromSettings();
+            this.SuspendUI = false;
+            ProcessorBase.SaveSettings<ScreenColourSettings>(this.Settings, (string)null);
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
-        Screen monitor = ((IEnumerable<Screen>) Screen.AllScreens).Where<Screen>((Func<Screen, bool>) (x => !x.Primary)).FirstOrDefault<Screen>();
-        if (monitor == null)
-        {
-            int num = (int) MessageBox.Show("No secondary monitor found...");
-        }
-        else
-            this.GetSizeFromMonitor(monitor);
+            Screen monitor = ((IEnumerable<Screen>)Screen.AllScreens).Where<Screen>((Func<Screen, bool>)(x => !x.Primary)).FirstOrDefault<Screen>();
+            if (monitor == null)
+            {
+                int num = (int)MessageBox.Show("No secondary monitor found...");
+            }
+            else
+                this.GetSizeFromMonitor(monitor);
         }
 
         private void ScreenColourUI_Load(object sender, EventArgs e)
@@ -267,7 +288,7 @@ namespace MaxLifx.UIs
             if (PaintOver != null)
                 PaintOver(this, e);
 
-            var newSize = new Size((int) (Size.Width*.9/6), (int) (Size.Height*.15));
+            var newSize = new Size((int)(Size.Width * .9 / 6), (int)(Size.Height * .15));
 
             var colors = new Color[7]
             {Color.Red, Color.Yellow, Color.Green, Color.Cyan, Color.Blue, Color.Magenta, Color.Red};
@@ -275,11 +296,11 @@ namespace MaxLifx.UIs
             Brush b;
             for (var i = 0; i < 6; i++)
             {
-                var newLocation = Location + new Size((int) (Size.Width*.9/7*(i + .8)), (int) (Size.Height*.8));
+                var newLocation = Location + new Size((int)(Size.Width * .9 / 7 * (i + .8)), (int)(Size.Height * .8));
                 b =
                     new LinearGradientBrush(
-                        Location + new Size((int) (Size.Width*.9/7*(i + .8)) - 1, (int) (Size.Height*.8)),
-                        new Point((int) (newLocation.X + Size.Width*.9/6), newLocation.Y), colors[i], colors[i + 1]);
+                        Location + new Size((int)(Size.Width * .9 / 7 * (i + .8)) - 1, (int)(Size.Height * .8)),
+                        new Point((int)(newLocation.X + Size.Width * .9 / 6), newLocation.Y), colors[i], colors[i + 1]);
                 e.Graphics.FillRectangle(b, new Rectangle(newLocation, newSize));
             }
         }

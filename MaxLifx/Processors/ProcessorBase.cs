@@ -1,7 +1,7 @@
-﻿using System.IO;
+﻿using MaxLifx.Processors.ProcessorSettings;
+using System.IO;
 using System.Xml;
 using System.Xml.Serialization;
-using MaxLifx.Processors.ProcessorSettings;
 
 namespace MaxLifx.Threads
 {
@@ -37,9 +37,9 @@ namespace MaxLifx.Threads
             //
 
             if (string.IsNullOrEmpty(filename))
-                filename = typeof (T).Name + "Default.maxlifx.xml";
+                filename = typeof(T).Name + "Default.maxlifx.xml";
 
-            var xml = new XmlSerializer(typeof (T));
+            var xml = new XmlSerializer(typeof(T));
 
             using (var stream = new MemoryStream())
             {
@@ -56,7 +56,7 @@ namespace MaxLifx.Threads
         public static void LoadSettings<T>(ref T settings, string filename)
         {
             if (filename == "")
-                filename = typeof (T).Name + "Default.maxlifx.xml";
+                filename = typeof(T).Name + "Default.maxlifx.xml";
 
 
             if (!File.Exists(filename))
@@ -68,12 +68,12 @@ namespace MaxLifx.Threads
 
             using (var read = new StringReader(xmlString))
             {
-                var outType = typeof (T);
+                var outType = typeof(T);
 
                 var serializer = new XmlSerializer(outType);
                 using (XmlReader reader = new XmlTextReader(read))
                 {
-                    settings = (T) serializer.Deserialize(reader);
+                    settings = (T)serializer.Deserialize(reader);
                     reader.Close();
                 }
 

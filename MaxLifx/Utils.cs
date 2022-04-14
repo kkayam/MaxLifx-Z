@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Drawing;
 using System.IO;
-using System.Runtime.InteropServices.WindowsRuntime;
 using System.Xml.Serialization;
-using NAudio.Wave;
 
 namespace MaxLifx
 {
@@ -20,22 +18,22 @@ namespace MaxLifx
 
         public static void ToXml<T>(this T objectToSerialize, Stream stream)
         {
-            new XmlSerializer(typeof (T)).Serialize(stream, objectToSerialize);
+            new XmlSerializer(typeof(T)).Serialize(stream, objectToSerialize);
         }
 
         public static void ToXml<T>(this T objectToSerialize, StringWriter writer)
         {
-            new XmlSerializer(typeof (T)).Serialize(writer, objectToSerialize);
+            new XmlSerializer(typeof(T)).Serialize(writer, objectToSerialize);
         }
 
         public static void FromXml<T>(this T objectToDeserialize, Stream stream)
         {
-            objectToDeserialize = (T) (new XmlSerializer(typeof (T)).Deserialize(stream));
+            objectToDeserialize = (T)(new XmlSerializer(typeof(T)).Deserialize(stream));
         }
 
         public static void FromXml<T>(this T objectToDeserialize, StringReader reader)
         {
-            objectToDeserialize = (T) (new XmlSerializer(typeof (T)).Deserialize(reader));
+            objectToDeserialize = (T)(new XmlSerializer(typeof(T)).Deserialize(reader));
         }
 
         public static void FromXmlString<T>(this string input, ref T output)

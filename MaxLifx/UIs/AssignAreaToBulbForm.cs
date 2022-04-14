@@ -1,8 +1,8 @@
-﻿using System;
+﻿using MaxLifx.Controllers;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
-using MaxLifx.Controllers;
 
 namespace MaxLifx
 {
@@ -19,7 +19,7 @@ namespace MaxLifx
             foreach (var l in LabelsAndLocations.OrderBy(x => x.Label))
                 lbBulbs.Items.Add(l.Label);
 
-            foreach (var v in Enum.GetNames(typeof (ScreenLocation)).OrderBy(x => x))
+            foreach (var v in Enum.GetNames(typeof(ScreenLocation)).OrderBy(x => x))
                 cbArea.Items.Add(v);
         }
 
@@ -39,10 +39,10 @@ namespace MaxLifx
             }
 
             SelectedLabelAndLocation =
-                LabelsAndLocations.Single(x => x.Label == (((ListBox) sender).SelectedItem.ToString()));
+                LabelsAndLocations.Single(x => x.Label == (((ListBox)sender).SelectedItem.ToString()));
 
             foreach (var v in cbArea.Items)
-                if (v.ToString() == Enum.GetName(typeof (ScreenLocation), SelectedLabelAndLocation.ScreenLocation))
+                if (v.ToString() == Enum.GetName(typeof(ScreenLocation), SelectedLabelAndLocation.ScreenLocation))
                     cbArea.SelectedItem = v;
 
             cbArea.Enabled = true;
@@ -60,7 +60,7 @@ namespace MaxLifx
             l.Label = SelectedLabelAndLocation.Label;
             l.Zones = SelectedLabelAndLocation.Zones;
             l.ScreenLocation =
-                (ScreenLocation) (Enum.Parse(typeof (ScreenLocation), ((ComboBox) sender).SelectedItem.ToString()));
+                (ScreenLocation)(Enum.Parse(typeof(ScreenLocation), ((ComboBox)sender).SelectedItem.ToString()));
             LabelsAndLocations.Add(l);
             _suspendUi = false;
         }

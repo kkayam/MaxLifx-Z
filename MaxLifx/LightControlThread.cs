@@ -4,7 +4,6 @@ using System.Linq;
 using System.Threading;
 using System.Xml;
 using System.Xml.Serialization;
-using MaxLifx.Threads;
 
 namespace MaxLifx
 {
@@ -44,7 +43,7 @@ namespace MaxLifx
                 var processorName = "MaxLifx." + typeName.Replace("Settings", "Processor");
                 var processorType = Type.GetType(processorName);
                 var processorConstructor = processorType.GetConstructor(Type.EmptyTypes);
-                Processor = (ScreenColourProcessor) (processorConstructor.Invoke(new object[] {}));
+                Processor = (ScreenColourProcessor)(processorConstructor.Invoke(new object[] { }));
 
                 Processor.SettingsAsXml = value;
             }

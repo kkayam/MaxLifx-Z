@@ -1,23 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Diagnostics;
-using System.Drawing;
-using System.Globalization;
-using System.IO;
-using System.Linq;
-using System.Net;
-using System.Threading;
-using System.Timers;
-using System.Windows.Forms;
-using System.Xml;
-using System.Xml.Serialization;
-using MaxLifx.Controllers;
-using MaxLifx.Controls;
+﻿using MaxLifx.Controllers;
 using MaxLifx.Payload;
-using MaxLifx.Threads;
 using MaxLifx.UIs;
 using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Threading;
+using System.Windows.Forms;
 
 namespace MaxLifx
 {
@@ -32,7 +22,7 @@ namespace MaxLifx
 
             InitializeComponent();
             _bulbController.SetupNetwork();
-            
+
             // try and load settings
             if (File.Exists("settings.json"))
             {
@@ -139,10 +129,6 @@ namespace MaxLifx
             lvThreads.Items.Remove(lvThreads.SelectedItems[0]);
         }
 
-        private void lvThreads_SelectedIndexChanged(object sender, EventArgs e)
-        {
-        }
-
         private void button8_Click(object sender, EventArgs e)
         {
             string selectedThreadUuid;
@@ -162,7 +148,7 @@ namespace MaxLifx
 
         private void button2_Click(object sender, EventArgs e)
         {
-            var s = new SaveFileDialog {DefaultExt = ".json"};
+            var s = new SaveFileDialog { DefaultExt = ".json" };
             s.Filter = "Json (*.json)|*.json";
             s.InitialDirectory = Directory.GetCurrentDirectory();
             s.AddExtension = true;
@@ -179,7 +165,8 @@ namespace MaxLifx
             s.InitialDirectory = Directory.GetCurrentDirectory();
             s.AddExtension = true;
 
-            if (s.ShowDialog() == DialogResult.OK) {
+            if (s.ShowDialog() == DialogResult.OK)
+            {
                 StopAllThreads();
                 LoadThreads(s.FileName);
             }

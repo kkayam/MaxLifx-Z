@@ -31,7 +31,6 @@
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
-            this.linkLabel1 = new System.Windows.Forms.LinkLabel();
             this.label4 = new System.Windows.Forms.Label();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
@@ -68,17 +67,6 @@
     "by making full use of\r\nmultizone Lifx products such as Lifx Z strips.";
             this.label3.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             // 
-            // linkLabel1
-            // 
-            this.linkLabel1.AutoSize = true;
-            this.linkLabel1.Location = new System.Drawing.Point(41, 236);
-            this.linkLabel1.Name = "linkLabel1";
-            this.linkLabel1.Size = new System.Drawing.Size(187, 13);
-            this.linkLabel1.TabIndex = 4;
-            this.linkLabel1.TabStop = true;
-            this.linkLabel1.Text = "MaxLifx uses nAudio under the MS-PL";
-            this.linkLabel1.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel1_LinkClicked);
-            // 
             // label4
             // 
             this.label4.AutoSize = true;
@@ -90,7 +78,14 @@
     "ect.\r\n\n And a special thanks to contributers: tidusjar,\r\nu/driver_king, /u/niXta" +
     "-, and /u/clarkinator";
             this.label4.TextAlign = System.Drawing.ContentAlignment.TopCenter;
-
+            // 
+            // pictureBox1
+            // 
+            this.pictureBox1.Location = new System.Drawing.Point(0, 0);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(100, 50);
+            this.pictureBox1.TabIndex = 6;
+            this.pictureBox1.TabStop = false;
             // 
             // About
             // 
@@ -98,7 +93,6 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(288, 258);
             this.Controls.Add(this.label4);
-            this.Controls.Add(this.linkLabel1);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.pictureBox1);
@@ -120,7 +114,6 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.LinkLabel linkLabel1;
         private System.Windows.Forms.Label label4;
     }
 }

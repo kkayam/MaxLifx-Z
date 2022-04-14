@@ -1,18 +1,18 @@
-﻿using System;
-using System.Drawing;
-using System.Drawing.Imaging;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Threading;
-using System.Xml.Serialization;
-using System.Windows.Forms;
-using MaxLifx.Controllers;
+﻿using MaxLifx.Controllers;
 using MaxLifx.Payload;
 using MaxLifx.Processors.ProcessorSettings;
 using MaxLifx.Threads;
 using MaxLifx.UIs;
+using System;
+using System.Collections.Generic;
+using System.Drawing;
+using System.Drawing.Imaging;
+using System.IO;
+using System.Linq;
+using System.Runtime.InteropServices;
+using System.Threading;
+using System.Windows.Forms;
+using System.Xml.Serialization;
 
 namespace MaxLifx
 {
@@ -23,20 +23,20 @@ namespace MaxLifx
         private Point BottomRight { get; set; }
 
         [XmlIgnore]
-        public ScreenColourSettings SettingsCast => ((ScreenColourSettings) Settings);
+        public ScreenColourSettings SettingsCast => ((ScreenColourSettings)Settings);
 
         public override ISettings Settings { get; set; }
 
         public override string SettingsAsXml
         {
-            get { return ((ScreenColourSettings) (Settings)).ToXmlString(); }
+            get { return ((ScreenColourSettings)(Settings)).ToXmlString(); }
             set
             {
                 ScreenColourSettings s;
 
                 using (var st = new StringReader(value))
                 {
-                    s = (ScreenColourSettings) (new XmlSerializer(typeof (ScreenColourSettings)).Deserialize(st));
+                    s = (ScreenColourSettings)(new XmlSerializer(typeof(ScreenColourSettings)).Deserialize(st));
                 }
 
                 Settings = s;
@@ -115,7 +115,7 @@ namespace MaxLifx
                 // condense and simplify the steps below to avoid repeating all this duplicate stuff for each edge and direction
                 // but today is not the day for me to figure that out; I'm just happy to get this working for now
 
-                
+
                 var rectList = new List<Rectangle>();
                 var tempRect = rect;
                 int currentEdge = originalEdge;
@@ -382,7 +382,8 @@ namespace MaxLifx
                 }
             }
             // see if there are multiple closest edges
-            int[] minDistance = boundsDistance.Select((v, j) => new {
+            int[] minDistance = boundsDistance.Select((v, j) => new
+            {
                 value = v,
                 index = j
             }).Where(pair => pair.value == boundsDistance.Min())
@@ -446,16 +447,16 @@ namespace MaxLifx
             Color areaColour;
 
             foreach (var label in SettingsCast.SelectedLabels)
+            {
+                var multiFlag = false;
+                var labelsAndLocations = SettingsCast.LabelsAndLocations.Single(x => x.Label == label);
+                var location = labelsAndLocations.ScreenLocation;
+                var zones = labelsAndLocations.Zones;
+                // skip if set to None
+                if (location == ScreenLocation.None)
                 {
-                    var multiFlag = false;
-                    var labelsAndLocations = SettingsCast.LabelsAndLocations.Single(x => x.Label == label);
-                    var location = labelsAndLocations.ScreenLocation;
-                    var zones = labelsAndLocations.Zones;
-                    // skip if set to None
-                    if (location == ScreenLocation.None)
-                    {
-                        continue;
-                    }
+                    continue;
+                }
                 if (zones > 1)
                 {
                     List<Rectangle> rectList = null;
@@ -469,7 +470,7 @@ namespace MaxLifx
                         case ScreenLocation.SurroundClockwise:
                             found = ZoneAreas.TryGetValue(zones.ToString() + "cw", out rectList);
                             break;
-                         // for all other ScreenLocations we skip
+                            // for all other ScreenLocations we skip
                     }
                     if (found)
                     {
@@ -495,7 +496,7 @@ namespace MaxLifx
                             {
                                 g.DrawImage(screenshot, -rectList[i].X, -rectList[i].Y);
                             }
-                            areaColour = GetAverageColor(CroppedImage,5);
+                            areaColour = GetAverageColor(CroppedImage, 5);
 
                             if (areaColour != null)
                             {
@@ -513,7 +514,8 @@ namespace MaxLifx
                                     Saturation_list[i] = (UInt16)saturation;
                                     Brightness_list[i] = (UInt16)brightness;
                                     Kelvin_list[i] = (UInt16)SettingsCast.Kelvin;
-                                } else
+                                }
+                                else
                                 {
                                     Color avgZoneColour = (Color)areaColour;
                                     // Color isn't HSV, so need to convert
@@ -617,7 +619,7 @@ namespace MaxLifx
                 }
             }
 
-            float delay = 1000 / Math.Min(SettingsCast.Delay * SettingsCast.GlobalUpdateRate+1, 20);
+            float delay = 1000 / Math.Min(SettingsCast.Delay * SettingsCast.GlobalUpdateRate + 1, 30);
             Thread.Sleep((int)Math.Round(delay));
         }
 
@@ -665,9 +667,9 @@ namespace MaxLifx
             image.UnlockBits(data);
 
             var numSamples = data.Width / sampleStep * data.Height / sampleStep;
-            var avgR = Math.Min(sumR / numSamples,255);
-            var avgG = Math.Min(sumG / numSamples,255);
-            var avgB = Math.Min(sumB / numSamples,255);
+            var avgR = Math.Min(sumR / numSamples, 255);
+            var avgG = Math.Min(sumG / numSamples, 255);
+            var avgB = Math.Min(sumB / numSamples, 255);
             return Color.FromArgb((int)avgR, (int)avgG, (int)avgB);
         }
 
@@ -690,58 +692,58 @@ namespace MaxLifx
             //var realtly = 50;//tl.Y < br.Y ? tl.Y : br.Y;
             Color topleft, bottomleft, topright, bottomright, top, bottom, left, right, all;
             ScreenColorSet returnValue;
-            var thumbSize = new Size(2,2);
+            var thumbSize = new Size(2, 2);
 
-                        hSrcDC = gsrc.GetHdc();
-                        hDC = gdest.GetHdc();
-                        //var retval = BitBlt(hDC, 0, 0, width, height, hSrcDC, 0, 0,
-                        //    (int) CopyPixelOperation.SourceCopy);
-                        SetStretchBltMode(hDC, 0x04);
-                        StretchBlt(hDC, 0, 0, thumbSize.Width, thumbSize.Height, hSrcDC, tl.X, tl.Y, width, height, 
-                            (int)CopyPixelOperation.SourceCopy);
-                        
-                        gdest.ReleaseHdc();
-                        gsrc.ReleaseHdc();
-                //screenPixel.Save("Pics\\" + DateTime.Now.ToString("hhmmss").Replace("/", "").Replace(":", "") + ".bmp");
-                var srcData = screenPixel.LockBits(
-                    new Rectangle(0, 0, screenPixel.Width, screenPixel.Height),
-                    ImageLockMode.ReadOnly,
-                    PixelFormat.Format32bppArgb);
+            hSrcDC = gsrc.GetHdc();
+            hDC = gdest.GetHdc();
+            //var retval = BitBlt(hDC, 0, 0, width, height, hSrcDC, 0, 0,
+            //    (int) CopyPixelOperation.SourceCopy);
+            SetStretchBltMode(hDC, 0x04);
+            StretchBlt(hDC, 0, 0, thumbSize.Width, thumbSize.Height, hSrcDC, tl.X, tl.Y, width, height,
+                (int)CopyPixelOperation.SourceCopy);
 
-                var stride = srcData.Stride;
+            gdest.ReleaseHdc();
+            gsrc.ReleaseHdc();
+            //screenPixel.Save("Pics\\" + DateTime.Now.ToString("hhmmss").Replace("/", "").Replace(":", "") + ".bmp");
+            var srcData = screenPixel.LockBits(
+                new Rectangle(0, 0, screenPixel.Width, screenPixel.Height),
+                ImageLockMode.ReadOnly,
+                PixelFormat.Format32bppArgb);
 
-                var scan0 = srcData.Scan0;
+            var stride = srcData.Stride;
 
-                var p = (byte*) (void*) scan0;
+            var scan0 = srcData.Scan0;
 
-                topleft = Color.FromArgb(255,     p[2], p[1], p[0]);
-                bottomleft = Color.FromArgb(255,  p[stride + 2], p[stride + 1], p[stride+0]);
-                topright = Color.FromArgb(255,    p[4 + 2], p[4 + 1], p[4 + 0]);
-                bottomright = Color.FromArgb(255, p[stride+4+2], p[stride + 4 + 1], p[stride + 4 + 0]);
+            var p = (byte*)(void*)scan0;
 
-                top = Color.FromArgb(255, (topleft.R + topright.R)/2, (topleft.G + topright.G)/2,
-                    (topleft.B + topright.B)/2);
-                bottom = Color.FromArgb(255, (bottomleft.R + bottomright.R)/2, (bottomleft.G + bottomright.G)/2,
-                    (bottomleft.B + bottomright.B)/2);
-                left = Color.FromArgb(255, (topleft.R + bottomleft.R)/2, (topleft.G + bottomleft.G)/2,
-                    (topleft.B + bottomleft.B)/2);
-                right = Color.FromArgb(255, (bottomright.R + topright.R)/2, (bottomright.G + topright.G)/2,
-                    (bottomright.B + topright.B)/2);
+            topleft = Color.FromArgb(255, p[2], p[1], p[0]);
+            bottomleft = Color.FromArgb(255, p[stride + 2], p[stride + 1], p[stride + 0]);
+            topright = Color.FromArgb(255, p[4 + 2], p[4 + 1], p[4 + 0]);
+            bottomright = Color.FromArgb(255, p[stride + 4 + 2], p[stride + 4 + 1], p[stride + 4 + 0]);
 
-                all = Color.FromArgb(255, (top.R + bottom.R)/2, (top.G + bottom.G)/2, (top.B + bottom.B)/2);
-                screenPixel.UnlockBits(srcData);
-                returnValue = new ScreenColorSet
-                {
-                    topleft = topleft,
-                    topright = topright,
-                    top = top,
-                    bottomleft = bottomleft,
-                    bottomright = bottomright,
-                    bottom = bottom,
-                    left = left,
-                    right = right,
-                    all = all
-                };
+            top = Color.FromArgb(255, (topleft.R + topright.R) / 2, (topleft.G + topright.G) / 2,
+                (topleft.B + topright.B) / 2);
+            bottom = Color.FromArgb(255, (bottomleft.R + bottomright.R) / 2, (bottomleft.G + bottomright.G) / 2,
+                (bottomleft.B + bottomright.B) / 2);
+            left = Color.FromArgb(255, (topleft.R + bottomleft.R) / 2, (topleft.G + bottomleft.G) / 2,
+                (topleft.B + bottomleft.B) / 2);
+            right = Color.FromArgb(255, (bottomright.R + topright.R) / 2, (bottomright.G + topright.G) / 2,
+                (bottomright.B + topright.B) / 2);
+
+            all = Color.FromArgb(255, (top.R + bottom.R) / 2, (top.G + bottom.G) / 2, (top.B + bottom.B) / 2);
+            screenPixel.UnlockBits(srcData);
+            returnValue = new ScreenColorSet
+            {
+                topleft = topleft,
+                topright = topright,
+                top = top,
+                bottomleft = bottomleft,
+                bottomright = bottomright,
+                bottom = bottom,
+                left = left,
+                right = right,
+                all = all
+            };
 
             return returnValue;
         }
@@ -754,7 +756,7 @@ namespace MaxLifx
             var width = area.Width;
 
             var height = area.Height;
-            
+
 
             var thumbSize = new Size(1, 1);
 
@@ -785,11 +787,11 @@ namespace MaxLifx
             Color MostUsedColor;
             //int MostUsedColorIncidence;
 
-        int pixelColor;
+            int pixelColor;
 
-        Dictionary<int, int> dctColorIncidence;
+            Dictionary<int, int> dctColorIncidence;
 
-        MostUsedColor = Color.Empty;
+            MostUsedColor = Color.Empty;
             //MostUsedColorIncidence = 0;
 
             dctColorIncidence = new Dictionary<int, int>();

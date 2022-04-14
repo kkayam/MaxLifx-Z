@@ -8,7 +8,7 @@
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>MaxLifx</RootNamespace>
-    <AssemblyName>MaxLifx-Z</AssemblyName>
+    <AssemblyName>MaxLifx-Z+</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -56,9 +56,6 @@
     <ApplicationIcon>3d2.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="NAudio">
-      <HintPath>..\NAudio.dll</HintPath>
-    </Reference>
     <Reference Include="Newtonsoft.Json, Version=7.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.7.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
@@ -80,31 +77,6 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ColourThemes\BlueAndWhite.cs" />
-    <Compile Include="ColourThemes\BlackAndWhite.cs" />
-    <Compile Include="ColourThemes\BerriesColourTheme.cs" />
-    <Compile Include="ColourThemes\RainbowV2ColourTheme.cs" />
-    <Compile Include="ColourThemes\RandomColourTheme.cs" />
-    <Compile Include="ColourThemes\RainbowColourTheme.cs" />
-    <Compile Include="ColourThemes\IColourTheme.cs" />
-    <Compile Include="ColourThemes\BlueAndOrangeColourTheme.cs" />
-    <Compile Include="ColourThemes\SpokesColourTheme.cs" />
-    <Compile Include="ColourThemes\RedAndOrangeColourTheme.cs" />
-    <Compile Include="ColourThemes\BlueColourTheme.cs" />
-    <Compile Include="ColourThemes\GreenColourTheme.cs" />
-    <Compile Include="ColourThemes\RedColourTheme.cs" />
-    <Compile Include="Controls\BrightnessSelector\BrightnessSelector.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Controls\BrightnessSelector\BrightnessSelectorHandle.cs" />
-    <Compile Include="Controls\ColourStrategy\IColourStrategy.cs" />
-    <Compile Include="Controls\ColourStrategy\OppositeColourStrategy.cs" />
-    <Compile Include="Controls\ColourStrategy\FreeColourStrategy.cs" />
-    <Compile Include="Controls\ColourStrategy\AnalogousColourStrategy.cs" />
-    <Compile Include="Controls\HueSelector\HueSelector.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Controls\HueSelector\HueSelectorHandle.cs" />
     <Compile Include="Controls\Knob\Knob.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -112,25 +84,6 @@
     <Compile Include="Controls\RoundedButton\RoundedButton.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Controls\SpectrumAnalyser\SampleAggregator.cs" />
-    <Compile Include="Controls\SpectrumAnalyser\SpectrumAnalyser.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Controls\SpectrumAnalyser\SpectrumAnalyser.Drawing.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Controls\SpectrumAnalyser\SpectrumAnalyser.Overrides.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Controls\SpectrumAnalyser\SpectrumAnalyserEngine.cs" />
-    <Compile Include="Controls\SpectrumAnalyser\SpectrumAnalyserHandle.cs" />
-    <Compile Include="Controls\Timeline\Timeline.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Controls\Timeline\Timeline.Overrides.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Controls\Timeline\TimelineEvent.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -141,12 +94,6 @@
     </Compile>
     <Compile Include="UIs\About.Designer.cs">
       <DependentUpon>About.cs</DependentUpon>
-    </Compile>
-    <Compile Include="UIs\AdvancedDiscover.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="UIs\AdvancedDiscover.Designer.cs">
-      <DependentUpon>AdvancedDiscover.cs</DependentUpon>
     </Compile>
     <Compile Include="UIs\AssignAreaToBulbForm.cs">
       <SubType>Form</SubType>
@@ -160,23 +107,11 @@
     <Compile Include="MainForm.Designer.cs">
       <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="UIs\EditTimelineEvent.cs">
+    <Compile Include="UIs\ZoneSelector.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="UIs\EditTimelineEvent.Designer.cs">
-      <DependentUpon>EditTimelineEvent.cs</DependentUpon>
-    </Compile>
-    <Compile Include="UIs\FakeBulb.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="UIs\FakeBulb.Designer.cs">
-      <DependentUpon>FakeBulb.cs</DependentUpon>
-    </Compile>
-    <Compile Include="UIs\Form2.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="UIs\Form2.Designer.cs">
-      <DependentUpon>Form2.cs</DependentUpon>
+    <Compile Include="UIs\ZoneSelector.Designer.cs">
+      <DependentUpon>ZoneSelector.cs</DependentUpon>
     </Compile>
     <Compile Include="LightControlThread.cs" />
     <Compile Include="Processors\ProcessorSettings\ISettings.cs" />
@@ -193,15 +128,9 @@
     <Compile Include="UIs\ProcessorUIs\ScreenColourUI.Designer.cs">
       <DependentUpon>ScreenColourUI.cs</DependentUpon>
     </Compile>
-    <Compile Include="UIs\UiFormBase.cs">
-      <SubType>Form</SubType>
-    </Compile>
     <Compile Include="Utils.cs" />
     <EmbeddedResource Include="UIs\About.resx">
       <DependentUpon>About.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="UIs\AdvancedDiscover.resx">
-      <DependentUpon>AdvancedDiscover.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UIs\AssignAreaToBulbForm.resx">
       <DependentUpon>AssignAreaToBulbForm.cs</DependentUpon>
@@ -209,14 +138,8 @@
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="UIs\EditTimelineEvent.resx">
-      <DependentUpon>EditTimelineEvent.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="UIs\FakeBulb.resx">
-      <DependentUpon>FakeBulb.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="UIs\Form2.resx">
-      <DependentUpon>Form2.cs</DependentUpon>
+    <EmbeddedResource Include="UIs\ZoneSelector.resx">
+      <DependentUpon>ZoneSelector.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -245,9 +168,6 @@
       <Project>{53625bb1-4234-4348-9952-2624e9bc9ba8}</Project>
       <Name>MaxLifxBulbController</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\Colour Wheel.png" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.5.2">

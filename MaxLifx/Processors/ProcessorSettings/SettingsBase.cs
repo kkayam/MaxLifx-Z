@@ -12,7 +12,7 @@ namespace MaxLifx.Processors.ProcessorSettings
         private string _onTimes;
         public List<string> SelectedLabels { get; set; } = new List<string>();
 
-        public string FileExtension => (GetType() + ".xml").Replace("MaxLifx.Processors.ProcessorSettings.","");
+        public string FileExtension => (GetType() + ".xml").Replace("MaxLifx.Processors.ProcessorSettings.", "");
 
         public string OnTimes
         {
