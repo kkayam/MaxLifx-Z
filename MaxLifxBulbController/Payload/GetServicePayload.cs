@@ -1,5 +1,5 @@
 ﻿namespace MaxLifx.Payload
-{    
+{
     /// <summary>
     /// Payload for a GetService (discovery) message
     /// </summary>

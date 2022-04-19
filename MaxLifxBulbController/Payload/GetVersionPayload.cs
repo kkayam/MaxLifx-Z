@@ -1,11 +1,4 @@
-﻿using MaxLifx.Payload;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace MaxLifx.Payload
+﻿namespace MaxLifx.Payload
 {
     public class GetVersionPayload : IPayload
     // getting the version info will let us know if light has zones (Beam or Z)

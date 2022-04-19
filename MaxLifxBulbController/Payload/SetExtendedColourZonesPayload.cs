@@ -1,9 +1,6 @@
-﻿using MaxLifx.Payload;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MaxLifx.Payload
 {
@@ -20,7 +17,8 @@ namespace MaxLifx.Payload
         public UInt16[] Kelvin_list { get; set; }
         public byte[] apply { get; set; }
 
-        public new byte[] GetPayload() { 
+        public new byte[] GetPayload()
+        {
 
             // Multizone packet example
             // RECALL: uses little endian(bytes reversed)
@@ -59,7 +57,7 @@ namespace MaxLifx.Payload
 
             for (int i = 0; i < Hue_list.Count(); i++)
             {
-                var hue = (Hue_list[i] * 65535 ) / 360;
+                var hue = (Hue_list[i] * 65535) / 360;
                 ushort sat = Saturation_list[i];
                 ushort bri = Brightness_list[i];
                 ushort K = Kelvin_list[i];

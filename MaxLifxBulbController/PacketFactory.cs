@@ -56,8 +56,8 @@ namespace MaxLifx.Packets
             // want to use a unique value here.
             byte[] source = new byte[4];
             // we want the response of the following payloads:
-            if((targetMacAddress.Sum(x => x) != 0) && payload.GetType() != typeof(GetServicePayload) && payload.GetType() != typeof(GetLabelPayload) && payload.GetType() != typeof(GetColourZonesPayload) && payload.GetType() != typeof(GetVersionPayload))
-                source = new byte[]  { 1,2,3,4 };
+            if ((targetMacAddress.Sum(x => x) != 0) && payload.GetType() != typeof(GetServicePayload) && payload.GetType() != typeof(GetLabelPayload) && payload.GetType() != typeof(GetColourZonesPayload) && payload.GetType() != typeof(GetVersionPayload))
+                source = new byte[] { 1, 2, 3, 4 };
 
             // The frame address starts with 64 bits (8 bytes) of the target field. Since we want this message to be processed by all device we will set it to zero.
             var frameAddress = targetMacAddress;// tagged = 0 and  { 0xD0, 0x73, 0xD5, 0x02, 0xA7, 0x72,0,0};

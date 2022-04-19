@@ -17,12 +17,21 @@ namespace MaxLifx
         private readonly MaxLifxBulbController _bulbController = new MaxLifxBulbController();
         Dictionary<string, LightControlThread> _threads = new Dictionary<string, LightControlThread>();
         private readonly Random _r = new Random();
+        private Boolean _BulbsOn = true;
+
         public MainForm()
         {
 
             InitializeComponent();
-            _bulbController.SetupNetwork();
 
+            // The ToolTip for the settings.
+            new ToolTip().SetToolTip(pictureBox1, "Master refresh rate");
+            new ToolTip().SetToolTip(pictureBox2, "Master brightness");
+            new ToolTip().SetToolTip(button2, "Discover bulbs");
+            new ToolTip().SetToolTip(button3, "Turn on/off all bulbs");
+
+            _bulbController.SetupNetwork();
+            var x = System.Runtime.InteropServices.RuntimeInformation.FrameworkDescription;
             // try and load settings
             if (File.Exists("settings.json"))
             {
@@ -33,7 +42,7 @@ namespace MaxLifx
             {
                 var dialogResult =
                     MessageBox.Show(
-                        "No bulbs discovered. Run bulb discovery now? The app willl hang for about ten seconds."
+                        "No bulbs discovered. Run bulb discovery now?"
                         , "Discover bulbs?",
                         MessageBoxButtons.YesNo);
 
@@ -57,7 +66,7 @@ namespace MaxLifx
                 StopAllThreads();
                 LoadThreads("default.json");
             }
-            Text = "MaxLifx-Z (" + _bulbController.Bulbs.Count.ToString() + ")";
+            Text = "MaxLifx-Z (" + _bulbController.Bulbs.Count.ToString() + " Bulbs)";
         }
 
 
@@ -77,7 +86,7 @@ namespace MaxLifx
         {
             var Bulbs = JsonConvert.DeserializeObject<List<Bulb>>(File.ReadAllText(filename));
             _bulbController.Bulbs = Bulbs;
-            Text = "MaxLifx-Z (" + _bulbController.Bulbs.Count.ToString() + ")";
+            Text = "MaxLifx-Z (" + _bulbController.Bulbs.Count.ToString() + " Bulbs)";
         }
 
 
@@ -238,35 +247,6 @@ namespace MaxLifx
             catch { }
         }
 
-        private void turnOnAllToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            TurnAllBulbsOn();
-        }
-
-        private void turnOffAllToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            TurnAllBulbsOff();
-        }
-
-        private void panicToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Panic();
-        }
-
-        private void toolStripMenuItem1_Click(object sender, EventArgs e)
-        {
-            _bulbController.DiscoverBulbs();
-
-            if (_bulbController.Bulbs.Count == 0)
-            {
-                MessageBox.Show("No bulbs found. If you have just received a Windows Firewall popup, try Bulbs -> Discover Bulbs now.");
-            }
-
-            Text = "MaxLifx-Z (" + _bulbController.Bulbs.Count.ToString() + ")";
-
-            SaveSettings();
-        }
-
         private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
         {
             new About().Show();
@@ -323,6 +303,33 @@ namespace MaxLifx
                 float val = knobControl2.Value;
                 thread.Processor.SettingsCast.GlobalUpdateRate = (val / 20);
             }
+        }
+
+        private void button2_Click_1(object sender, EventArgs e)
+        {
+
+            _bulbController.DiscoverBulbs();
+
+
+            Text = "MaxLifx-Z (" + _bulbController.Bulbs.Count.ToString() + " Bulbs)";
+
+            SaveSettings();
+        }
+
+        private void button3_Click_1(object sender, EventArgs e)
+        {
+            if (_BulbsOn)
+            {
+                TurnAllBulbsOff();
+                _BulbsOn = false;
+
+            }
+            else
+            {
+                TurnAllBulbsOn();
+                _BulbsOn = true;
+            }
+
         }
     }
 }

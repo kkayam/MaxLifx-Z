@@ -184,6 +184,12 @@
   <ItemGroup>
     <Content Include="3d2.ico" />
     <Content Include="Resources\3d2.ico" />
+    <Content Include="Resources\minus.png" />
+    <Content Include="Resources\plus.png" />
+    <Content Include="Resources\power.png" />
+    <Content Include="Resources\station.png" />
+    <Content Include="Resources\subtraction.png" />
+    <Content Include="Resources\sun.png" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

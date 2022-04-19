@@ -1,9 +1,5 @@
-﻿using MaxLifx.Payload;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MaxLifx.Payload
 {
@@ -11,7 +7,7 @@ namespace MaxLifx.Payload
     // although this is GetColourZones, we are really just calling this to get StateZone for the count of zones
     {
         private byte[] _messageType = new byte[2] { 0xF6, 0x01 };
-        public byte[] MessageType {  get { return _messageType; } }
+        public byte[] MessageType { get { return _messageType; } }
         public int Hue { get; set; }
         public byte start_index = 0;
         public byte end_index = 0;

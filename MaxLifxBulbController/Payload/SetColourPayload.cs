@@ -9,7 +9,7 @@ namespace MaxLifx.Payload
     public class SetColourPayload : IPayload
     {
         private byte[] _messageType = new byte[2] { 0x66, 0 };
-        public byte[] MessageType {  get { return _messageType; } }
+        public byte[] MessageType { get { return _messageType; } }
         public int Hue { get; set; }
         public UInt16 Saturation { get; set; }
         public UInt16 Brightness { get; set; }

@@ -1,9 +1,5 @@
-﻿using MaxLifx.Payload;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MaxLifx.Payload
 {
@@ -16,7 +12,8 @@ namespace MaxLifx.Payload
 
         public byte[] apply { get; set; }
 
-        public new byte[] GetPayload() { 
+        public new byte[] GetPayload()
+        {
 
             // Multizone packet example
             // RECALL: uses little endian(bytes reversed)
